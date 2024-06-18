@@ -39,6 +39,8 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
     public partial class MainWindow : Window
     {
         public ObservableCollection<Donation> Donations { get; set; }
+        private const string SearchBarPlaceholderText = "Search...";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -143,6 +145,49 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 MessageBox.Show($"An error occurred while loading donations: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 StatusTextBlock.Text = "Error loading donations.";
             }
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            string searchText = SearchTextBox.Text.ToLower();
+            var filteredDonations = Donations.Where(d =>
+                d.FullName.ToLower().Contains(searchText) ||
+                d.IdentificationNumber.ToLower().Contains(searchText) ||
+                d.BloodType.ToLower().Contains(searchText)
+            ).ToList();
+
+            DonationsDataGrid.ItemsSource = filteredDonations;
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SearchTextBox.Text) || SearchTextBox.Text == SearchBarPlaceholderText)
+            {
+                DonationsDataGrid.ItemsSource = Donations;
+            }
+        }
+
+        private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (SearchTextBox.Text == SearchBarPlaceholderText)
+            {
+                SearchTextBox.Text = string.Empty;
+                SearchTextBox.Foreground = SystemColors.ControlTextBrush;
+            }
+        }
+
+        private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SearchTextBox.Text))
+            {
+                SetPlaceholderText();
+            }
+        }
+
+        private void SetPlaceholderText()
+        {
+            SearchTextBox.Text = SearchBarPlaceholderText;
+            SearchTextBox.Foreground = SystemColors.GrayTextBrush;
         }
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
