@@ -5,8 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCE24_BioMedSW_Blood_Establishment_WPF"
         mc:Ignorable="d"
-        Title="RegisterDonationWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="RegisterDonationWindow" Height="450" Width="450">
+    <StackPanel Margin="20">
+        <TextBlock Text="Identification Number:"/>
+        <TextBox x:Name="IdentificationNumberTextBox" Margin="0,0,0,10"/>
+
+        <TextBlock Text="Full Name:"/>
+        <TextBox x:Name="FullNameTextBox" Margin="0,0,0,10"/>
+
+        <TextBlock Text="Blood Type:"/>
+        <ComboBox x:Name="BloodTypeComboBox" Margin="0,0,0,10">
+            <ComboBoxItem>A+</ComboBoxItem>
+            <ComboBoxItem>A-</ComboBoxItem>
+            <ComboBoxItem>B+</ComboBoxItem>
+            <ComboBoxItem>B-</ComboBoxItem>
+            <ComboBoxItem>AB+</ComboBoxItem>
+            <ComboBoxItem>AB-</ComboBoxItem>
+            <ComboBoxItem>O+</ComboBoxItem>
+            <ComboBoxItem>O-</ComboBoxItem>
+        </ComboBox>
+
+        <TextBlock Text="Donation Date:"/>
+        <DatePicker x:Name="DonationDatePicker" Margin="0,0,0,20"/>
+
+        <Button Content="Submit" Click="SubmitButton_Click" 
+             HorizontalAlignment="Center" 
+             Padding="20,5"/>
+    </StackPanel>
 </Window>
