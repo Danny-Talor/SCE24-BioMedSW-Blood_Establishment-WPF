@@ -7,6 +7,47 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button x:Name="RegisterDonationButton" Content="Register" Margin="5" Padding="10" Click="RegisterDonation_Click" />
+            <Button x:Name="SendDonationButton" Content="Send" Margin="5" Padding="10" Click="SendDonationButton_Click" />
+            <Button x:Name="MassCasualtyIncidentButton" Content="Mass Casualty Incident" Margin="5" Padding="10" Click="MassCasualtyIncidentButton_Click" Background="Red" Foreground="White" />
+        </StackPanel>
+
+        <!-- Search Bar -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <TextBox x:Name="SearchTextBox" Width="200" Margin="5" TextChanged="SearchTextBox_TextChanged" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus" />
+            <Button x:Name="SearchButton" Content="Search" Margin="5" Padding="10" Click="SearchButton_Click" />
+        </StackPanel>
+
+        <!-- Data Grid -->
+        <DataGrid x:Name="DonationsDataGrid" Grid.Row="2" AutoGenerateColumns="False" Margin="10" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Identification Number" Binding="{Binding IdentificationNumber}" />
+                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" />
+                <DataGridTextColumn Header="Blood Type" Binding="{Binding BloodType}" />
+                <DataGridTemplateColumn Header="Amount">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Amount}" Click="ShowDonationDates_Click" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="3" Margin="10">
+            <StatusBarItem>
+                <TextBlock x:Name="StatusTextBlock" Text="Ready" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
