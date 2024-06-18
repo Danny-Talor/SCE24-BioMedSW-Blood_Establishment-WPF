@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCE24_BioMedSW_Blood_Establishment_WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280">
+        Title="MainWindow" Height="720" Width="650" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -28,28 +28,57 @@
             <Button x:Name="SearchButton" Content="Search" Margin="5" Padding="5" Click="SearchButton_Click" Height="30" />
         </StackPanel>
 
-        <!-- Data Grid -->
-        <DataGrid Grid.Row="2"
-                  x:Name="DonationsDataGrid" 
-                  AutoGenerateColumns="False" 
-                  Margin="10" 
-                  IsReadOnly="True" 
-                  ScrollViewer.CanContentScroll="True" 
-                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  ScrollViewer.HorizontalScrollBarVisibility="Auto">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Identification Number" Binding="{Binding IdentificationNumber}" />
-                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" />
-                <DataGridTextColumn Header="Blood Type" Binding="{Binding BloodType}" />
-                <DataGridTemplateColumn Header="Amount">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="{Binding DonationCount}" Click="ShowDonationDates_Click" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <!-- Donators Data and Totals -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="93*"/>
+                <ColumnDefinition Width="35*"/>
+            </Grid.ColumnDefinitions>
+            <!-- Donations Data -->
+            <DataGrid Grid.Column="0"
+                      x:Name="DonationsDataGrid"
+                      AutoGenerateColumns="False"
+                      Margin="10,10,10,10"
+                      IsReadOnly="True"
+                      ScrollViewer.CanContentScroll="True"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Identification Number" Binding="{Binding IdentificationNumber}" />
+                    <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" />
+                    <DataGridTextColumn Header="Blood Type" Binding="{Binding BloodType}" />
+                    <DataGridTemplateColumn Header="Amount">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding DonationCount}" Click="ShowDonationDates_Click" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <!-- Blood Totals -->
+            <StackPanel Grid.Column="1">
+                <Border Background="#D8D8D8" Width="150">
+                    <TextBlock HorizontalAlignment="Center" FontSize="18"> Total blood count</TextBlock>
+                </Border>
+                <DataGrid x:Name="TotalBloodDataGrid"
+                          AutoGenerateColumns="False"
+                          Margin="10,10,10,10"
+                          IsReadOnly="True"
+                          ScrollViewer.CanContentScroll="True"
+                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                          HeadersVisibility="None"
+                          RowBackground="GhostWhite"
+                          AlternatingRowBackground="LightGray" 
+                          SelectionMode="Single">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding BloodType}" Width="*" FontSize="25"/>
+                        <DataGridTextColumn Binding="{Binding TotalAmount}" Width="*" FontSize="25"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </Grid>
 
         <!-- Status Bar -->
         <StatusBar Grid.Row="3" Margin="10">
