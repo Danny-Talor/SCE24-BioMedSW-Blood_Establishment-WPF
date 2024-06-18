@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35004.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCE24-BioMedSW-Blood_Establishment-WPF", "SCE24-BioMedSW-Blood_Establishment-WPF.csproj", "{D4E0F05C-242D-4ACC-9C40-27AA3ABCA991}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4E0F05C-242D-4ACC-9C40-27AA3ABCA991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4E0F05C-242D-4ACC-9C40-27AA3ABCA991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4E0F05C-242D-4ACC-9C40-27AA3ABCA991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4E0F05C-242D-4ACC-9C40-27AA3ABCA991}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1B4B1B1D-02EC-463D-82AD-A87019C2DAE1}
+	EndGlobalSection
+EndGlobal
