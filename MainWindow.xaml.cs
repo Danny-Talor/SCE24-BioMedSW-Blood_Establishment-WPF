@@ -1,14 +1,9 @@
 ﻿using System.Collections.ObjectModel;
-using System.Text;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace SCE24_BioMedSW_Blood_Establishment_WPF
 {
@@ -27,6 +22,17 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         }
     }
 
+    [Serializable]
+    public class DonationData
+    {
+        public List<Donation> Donations { get; set; }
+
+        public DonationData()
+        {
+            Donations = new List<Donation>();
+        }
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -38,6 +44,8 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             InitializeComponent();
             Donations = new ObservableCollection<Donation>();
             DonationsDataGrid.ItemsSource = Donations;
+            LoadDonations();
+            Closing += MainWindow_Closing;
         }
 
         private void RegisterDonation_Click(object sender, RoutedEventArgs e)
@@ -79,6 +87,66 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 var datesString = string.Join("\n", donation.DonationDates.Select(d => d.ToShortDateString()));
                 MessageBox.Show($"Donation dates for {donation.FullName}:\n\n{datesString}", "Donation Dates");
             }
+        }
+
+        private void SaveDonations()
+        {
+            try
+            {
+                string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string filePath = System.IO.Path.Combine(appDataFolder, "donations.xml");
+
+                DonationData donationData = new DonationData
+                {
+                    Donations = new List<Donation>(Donations)
+                };
+
+                XmlSerializer serializer = new XmlSerializer(typeof(DonationData));
+
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    serializer.Serialize(fileStream, donationData);
+                }
+
+                StatusTextBlock.Text = "Donations saved successfully.";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while saving donations: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                StatusTextBlock.Text = "Error saving donations.";
+            }
+        }
+
+        private void LoadDonations()
+        {
+            try
+            {
+                string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string filePath = System.IO.Path.Combine(appDataFolder, "donations.xml");
+
+                if (File.Exists(filePath))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(DonationData));
+
+                    using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+                    {
+                        DonationData donationData = (DonationData)serializer.Deserialize(fileStream);
+                        Donations = new ObservableCollection<Donation>(donationData.Donations);
+                        DonationsDataGrid.ItemsSource = Donations;
+                    }
+
+                    StatusTextBlock.Text = "Donations loaded successfully.";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while loading donations: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                StatusTextBlock.Text = "Error loading donations.";
+            }
+        }
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SaveDonations();
         }
     }
 }
