@@ -168,6 +168,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             }
             DonationsDataGrid.Items.Refresh();
             CalculateBloodTotals();
+            SaveDonations();
         }
 
         private void ShowDonationDates_Click(object sender, RoutedEventArgs e)
@@ -204,7 +205,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     serializer.Serialize(fileStream, donationData);
                 }
 
-                StatusTextBlock.Text = "Donations saved successfully.";
+                StatusTextBlock.Text = "Donations updated successfully.";
             }
             catch (Exception ex)
             {
