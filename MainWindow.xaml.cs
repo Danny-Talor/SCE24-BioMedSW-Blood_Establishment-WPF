@@ -96,11 +96,15 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             Random random = new Random();
             int DonationCount = 0;
 
-            // Generate random donations
+            
             for (int i = 0; i < 10; i++) // Generating 10 random donations as an example
             {
-                // Generate random 9-digit identification number
+                // Generate random valid israeli identification number
                 string identificationNumber = random.Next(100000000, 1000000000).ToString();
+                while (!Util.IsValidIsraeliIDNumber(identificationNumber))
+                {
+                    identificationNumber = random.Next(100000000, 1000000000).ToString();
+                }
 
                 // Generate random full name (for simplicity, using a basic list of names)
                 string[] fullNames = { "John Doe", "Jane Smith", "Michael Johnson", "Emily Brown", "Robert Williams" };
