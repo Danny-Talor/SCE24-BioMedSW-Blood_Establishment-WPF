@@ -2,7 +2,6 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Shapes;
 using System.Xml.Serialization;
 
 namespace SCE24_BioMedSW_Blood_Establishment_WPF
@@ -12,13 +11,24 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         public string FullName { get; set; }
         public string IdentificationNumber { get; set; }
         public string BloodType { get; set; }
-        public int Amount { get; set; }
+        public int DonationCount { get; set; }
         public List<DateTime> DonationDates { get; set; }
 
         public Donation()
         {
-            Amount = 1;
+            FullName = String.Empty;
+            IdentificationNumber = String.Empty;
+            BloodType = String.Empty;
+            DonationCount = 0;
             DonationDates = new List<DateTime>();
+        }
+        public Donation(string FullName, string IdentificationNumber, string BloodType, int Amount, List<DateTime> DonationDates)
+        {
+            this.FullName = FullName;
+            this.IdentificationNumber = IdentificationNumber;
+            this.BloodType = BloodType;
+            this.DonationCount = Amount;
+            this.DonationDates = DonationDates;
         }
     }
 
@@ -57,6 +67,52 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             registerWindow.ShowDialog();
         }
 
+        private void PopulateTable_Click(object sender, RoutedEventArgs e)
+        {
+            Random random = new Random();
+            int DonationCount = 0;
+
+            // Generate random donations
+            for (int i = 0; i < 10; i++) // Generating 10 random donations as an example
+            {
+                // Generate random 9-digit identification number
+                string identificationNumber = random.Next(100000000, 1000000000).ToString();
+
+                // Generate random full name (for simplicity, using a basic list of names)
+                string[] fullNames = { "John Doe", "Jane Smith", "Michael Johnson", "Emily Brown", "Robert Williams" };
+                string fullName = fullNames[random.Next(0, fullNames.Length)];
+
+                // Generate random blood type (for simplicity, using a basic list of blood types)
+                string[] bloodTypes = { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" };
+                string bloodType = bloodTypes[random.Next(0, bloodTypes.Length)];
+
+                // Generate random donation dates and with each date add to the amount of donations
+                List<DateTime> donationDates = new List<DateTime>();
+                int numDates = random.Next(1, 4); // Randomly choose 1 to 3 dates
+                for (int j = 0; j < numDates; j++)
+                {
+                    DateTime date = DateTime.Now.AddDays(-random.Next(1, 100)); // Random date within the last 100 days
+                    donationDates.Add(date);
+                    DonationCount++;
+                }
+
+                // Create new Donation object
+                Donation newDonation = new Donation(fullName, identificationNumber, bloodType, DonationCount, donationDates);
+
+                // Add to ObservableCollection
+                Donations.Add(newDonation);
+
+                // Reset
+                DonationCount = 0;
+            }
+
+            // Refresh DataGrid
+            DonationsDataGrid.Items.Refresh();
+
+            // Optionally, update status
+            StatusTextBlock.Text = "Table populated with random data.";
+        }
+
         private void SendDonationButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("In development", "Send donation");
@@ -72,7 +128,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             var existingDonation = Donations.FirstOrDefault(d => d.IdentificationNumber == donation.IdentificationNumber);
             if (existingDonation != null)
             {
-                existingDonation.Amount++;
+                existingDonation.DonationCount++;
                 existingDonation.DonationDates.Add(donation.DonationDates[0]);
             }
             else
@@ -86,7 +142,13 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         {
             if (sender is Button button && button.DataContext is Donation donation)
             {
-                var datesString = string.Join("\n", donation.DonationDates.Select(d => d.ToShortDateString()));
+                // Sort donationDates by date
+                var sortedDates = donation.DonationDates.OrderBy(d => d).ToList();
+
+                // Create formatted string with sorted dates
+                var datesString = string.Join("\n", sortedDates.Select(d => d.ToShortDateString()));
+
+                // Show MessageBox with sorted donation dates
                 MessageBox.Show($"Donation dates for {donation.FullName}:\n\n{datesString}", "Donation Dates");
             }
         }
