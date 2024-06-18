@@ -23,25 +23,27 @@
 
         <!-- Search Bar -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <TextBox x:Name="SearchTextBox" Width="200" Margin="5" TextChanged="SearchTextBox_TextChanged" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus" />
-            <Button x:Name="SearchButton" Content="Search" Margin="5" Padding="10" Click="SearchButton_Click" />
+            <TextBox x:Name="SearchTextBox" Width="200" Margin="5" TextChanged="SearchTextBox_TextChanged" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus" Height="30" />
+            <Button x:Name="SearchButton" Content="Search" Margin="5" Padding="5" Click="SearchButton_Click" Height="30" />
         </StackPanel>
-
+        
         <!-- Data Grid -->
-        <DataGrid x:Name="DonationsDataGrid" Grid.Row="2" AutoGenerateColumns="False" Margin="10" IsReadOnly="True">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Identification Number" Binding="{Binding IdentificationNumber}" />
-                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" />
-                <DataGridTextColumn Header="Blood Type" Binding="{Binding BloodType}" />
-                <DataGridTemplateColumn Header="Amount">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="{Binding Amount}" Click="ShowDonationDates_Click" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <ScrollViewer Grid.Row="2">
+            <DataGrid x:Name="DonationsDataGrid" AutoGenerateColumns="False" Margin="10" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Identification Number" Binding="{Binding IdentificationNumber}" />
+                    <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" />
+                    <DataGridTextColumn Header="Blood Type" Binding="{Binding BloodType}" />
+                    <DataGridTemplateColumn Header="Amount">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Amount}" Click="ShowDonationDates_Click" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
 
         <!-- Status Bar -->
         <StatusBar Grid.Row="3" Margin="10">
