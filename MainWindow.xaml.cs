@@ -47,6 +47,16 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             registerWindow.ShowDialog();
         }
 
+        private void SendDonationButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("In development", "Send donation");
+        }
+
+        private void MassCasualtyIncidentButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("In development", "Mass Casualty Incident");
+        }
+
         private void RegisterWindow_DonationSubmitted(object sender, Donation donation)
         {
             var existingDonation = Donations.FirstOrDefault(d => d.IdentificationNumber == donation.IdentificationNumber);
