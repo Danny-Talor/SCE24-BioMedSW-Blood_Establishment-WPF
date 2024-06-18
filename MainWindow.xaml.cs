@@ -19,7 +19,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             FullName = String.Empty;
             IdentificationNumber = String.Empty;
             BloodType = String.Empty;
-            DonationCount = 0;
+            DonationCount = 1;
             DonationDates = new List<DateTime>();
         }
         public Donation(string FullName, string IdentificationNumber, string BloodType, int Amount, List<DateTime> DonationDates)
@@ -29,6 +29,17 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             this.BloodType = BloodType;
             this.DonationCount = Amount;
             this.DonationDates = DonationDates;
+        }
+    }
+    public class BloodTotal
+    {
+        public string BloodType { get; set; }
+        public int TotalAmount { get; set; }
+
+        public BloodTotal(string bloodType, int totalAmount)
+        {
+            BloodType = bloodType;
+            TotalAmount = totalAmount;
         }
     }
 
@@ -49,13 +60,26 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
     public partial class MainWindow : Window
     {
         public ObservableCollection<Donation> Donations { get; set; }
+        public ObservableCollection<BloodTotal> BloodTotals { get; set; }
         private const string SearchBarPlaceholderText = "Search...";
 
         public MainWindow()
         {
             InitializeComponent();
             Donations = new ObservableCollection<Donation>();
+            BloodTotals = new ObservableCollection<BloodTotal>
+            {
+                new BloodTotal("A-", 0),
+                new BloodTotal("A+", 0),
+                new BloodTotal("AB-", 0),
+                new BloodTotal("AB+", 0),
+                new BloodTotal("B-", 0),
+                new BloodTotal("B+", 0),
+                new BloodTotal("O-", 0),
+                new BloodTotal("O+", 0)
+            };
             DonationsDataGrid.ItemsSource = Donations;
+            TotalBloodDataGrid.ItemsSource = BloodTotals;
             LoadDonations();
             Closing += MainWindow_Closing;
         }
@@ -109,6 +133,9 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             // Refresh DataGrid
             DonationsDataGrid.Items.Refresh();
 
+            // Recalculate blood totals
+            CalculateBloodTotals();
+
             // Optionally, update status
             StatusTextBlock.Text = "Table populated with random data.";
         }
@@ -136,6 +163,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 Donations.Add(donation);
             }
             DonationsDataGrid.Items.Refresh();
+            CalculateBloodTotals();
         }
 
         private void ShowDonationDates_Click(object sender, RoutedEventArgs e)
@@ -207,6 +235,8 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 MessageBox.Show($"An error occurred while loading donations: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 StatusTextBlock.Text = "Error loading donations.";
             }
+
+            CalculateBloodTotals();
         }
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
@@ -254,6 +284,28 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveDonations();
+        }
+
+        private void CalculateBloodTotals()
+        {
+            // Reset totals
+            foreach (var bloodTotal in BloodTotals)
+            {
+                bloodTotal.TotalAmount = 0;
+            }
+
+            // Calculate totals
+            foreach (var donation in Donations)
+            {
+                var bloodTotal = BloodTotals.FirstOrDefault(bt => bt.BloodType == donation.BloodType);
+                if (bloodTotal != null)
+                {
+                    bloodTotal.TotalAmount += donation.DonationCount;
+                }
+            }
+
+            // Refresh the DataGrid
+            TotalBloodDataGrid.Items.Refresh();
         }
     }
 }
