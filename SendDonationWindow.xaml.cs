@@ -45,7 +45,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
 
             if (!string.IsNullOrEmpty(requestedBloodType) && requestedAmount > 0)
             {
-                string compatibleBloodTypes = Util.GetRecommendedBloodType(requestedBloodType);
+                string compatibleBloodTypes = Util.GetCompatibleBloodTypes(requestedBloodType);
                 string recommendedBloodType = Util.GetRecommendedBloodType(requestedBloodType, requestedAmount, Donations);
                 CompatibleBloodTypesTextBlock.Text = compatibleBloodTypes;
                 RecommendedBloodTypeTextBlock.Text = recommendedBloodType;
