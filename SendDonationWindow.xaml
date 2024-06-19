@@ -7,6 +7,105 @@
         mc:Ignorable="d"
         Title="SendDonationWindow" Height="450" Width="800">
     <Grid>
-        <TextBlock>Send donation window</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="50*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Recipient Side -->
+        <Border Grid.Row="1" Grid.Column="0" Background="AntiqueWhite" BorderThickness="1" BorderBrush="Black" Margin="15,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"> Recipient</TextBlock>
+                <TextBlock Grid.Row="1"> Requested blood type</TextBlock>
+                <ComboBox Grid.Row="2"  x:Name="RequestedBloodTypeComboBox">
+                    <ComboBoxItem>A+</ComboBoxItem>
+                    <ComboBoxItem>A-</ComboBoxItem>
+                    <ComboBoxItem>B+</ComboBoxItem>
+                    <ComboBoxItem>B-</ComboBoxItem>
+                    <ComboBoxItem>AB+</ComboBoxItem>
+                    <ComboBoxItem>AB-</ComboBoxItem>
+                    <ComboBoxItem>O+</ComboBoxItem>
+                    <ComboBoxItem>O-</ComboBoxItem>
+                </ComboBox>
+                <TextBlock Grid.Row="3">Amount</TextBlock>
+                <TextBox Grid.Row="4" x:Name="RequestedAmountTextBox" InputScope="Number"></TextBox>
+                <TextBlock Grid.Row="5">Send to</TextBlock>
+                <ComboBox Grid.Row="6" x:Name="DepartmentComboBox">
+                    <ComboBoxItem>Emergency Room</ComboBoxItem>
+                    <ComboBoxItem>Surgery Room 1</ComboBoxItem>
+                    <ComboBoxItem>Surgery Room 2</ComboBoxItem>
+                    <ComboBoxItem>Surgery Room 3</ComboBoxItem>
+                    <ComboBoxItem>Surgery Room 4</ComboBoxItem>
+                    <ComboBoxItem>Surgery Room 5</ComboBoxItem>
+                    <ComboBoxItem>Surgery Room 6</ComboBoxItem>
+                    <ComboBoxItem>Intensive Care Unit</ComboBoxItem>
+                    <ComboBoxItem>Cardiology Department</ComboBoxItem>
+                    <ComboBoxItem>Oncology Department</ComboBoxItem>
+                    <ComboBoxItem>Neurology Department</ComboBoxItem>
+                </ComboBox>
+            </Grid>
+        </Border>
+        
+        <!-- Arrow -->
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="5*"/>
+            </Grid.RowDefinitions>
+
+            <Image Grid.Row="0" Source="/green_arrow_left.png" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+        <!-- Stock Side -->
+        <Border Grid.Row="1" Grid.Column="2" Background="LightYellow" BorderThickness="1" BorderBrush="Black" Margin="1,0,15,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"> Stock </TextBlock>
+                <TextBlock Grid.Row="1" >Compatible blood type(s)</TextBlock>
+                <TextBlock Grid.Row="2" x:Name="CompatibleBloodTypesTextBlock" HorizontalAlignment="Center" Foreground="Red" />
+                <TextBlock Grid.Row="3">Recommended blood type to send</TextBlock>
+                <TextBlock Grid.Row="4" x:Name="RecommendedBloodTypeTextBlock" HorizontalAlignment="Center" Foreground="Red" /> 
+                <TextBlock Grid.Row="5">Blood type to send</TextBlock>
+                <ComboBox Grid.Row="6"  x:Name="BloodTypeToSendComboBox">
+                    <ComboBoxItem>A+</ComboBoxItem>
+                    <ComboBoxItem>A-</ComboBoxItem>
+                    <ComboBoxItem>B+</ComboBoxItem>
+                    <ComboBoxItem>B-</ComboBoxItem>
+                    <ComboBoxItem>AB+</ComboBoxItem>
+                    <ComboBoxItem>AB-</ComboBoxItem>
+                    <ComboBoxItem>O+</ComboBoxItem>
+                    <ComboBoxItem>O-</ComboBoxItem>
+                </ComboBox>
+            </Grid>
+        </Border>
+
+        <!-- Send Button -->
+        <Button Grid.Row="2" Grid.Column="1" Content="Send" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,10,30,0" Click="SendButton_Click"/>
     </Grid>
 </Window>
