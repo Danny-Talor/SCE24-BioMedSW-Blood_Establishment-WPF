@@ -7,19 +7,25 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>bin\blood_icon_149283.ico</ApplicationIcon>
+    <ApplicationIcon>blood_icon_149283.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="green_arrow_left.png" />
     <None Remove="letter_i_PNG67.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="bin\blood_icon_149283.ico" />
+    <Content Include="blood_icon_149283.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="green_arrow_left.png" />
     <Resource Include="letter_i_PNG67.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="bin\" />
   </ItemGroup>
 
 </Project>
