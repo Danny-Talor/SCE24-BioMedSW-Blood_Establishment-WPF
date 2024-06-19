@@ -153,7 +153,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             DonationsDataGrid.Items.Refresh();
 
             // Recalculate blood totals
-            CalculateBloodTotals();
+            UpdateBloodTotals();
 
             // Update status message
             StatusTextBlock.Text = "Table populated with random data.";
@@ -169,7 +169,30 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         // Event handler for the "Mass Casualty Incident" button (not implemented yet)
         private void MassCasualtyIncidentButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("In development", "Mass Casualty Incident");
+            // Confirmation message box
+            MessageBoxResult result = MessageBox.Show("You are about to send all available O- blood type donations to the mass casualty incident. Continue?",
+                                                      "Mass Casualty Incident",
+                                                      MessageBoxButton.OKCancel,
+                                                      MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.OK)
+            {
+                // Delete all O- donations from the collection
+                var oNegativeDonations = Donations.Where(d => d.BloodType == "O-").ToList();
+                foreach (var donation in oNegativeDonations)
+                {
+                    Donations.Remove(donation);
+                }
+
+                // Refresh DonationsDataGrid
+                DonationsDataGrid.Items.Refresh();
+
+                // Update blood totals
+                UpdateBloodTotals();
+
+                // Update status message
+                StatusTextBlock.Text = "MCI completed.";
+            }
         }
 
         // Event handler for donation submission from RegisterDonationWindow
@@ -191,7 +214,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
 
             // Refresh DataGrids and recalculate blood totals
             DonationsDataGrid.Items.Refresh();
-            CalculateBloodTotals();
+            UpdateBloodTotals();
             // Save donations to file
             SaveDonations();
         }
@@ -278,7 +301,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             }
 
             // Calculate and update blood type totals
-            CalculateBloodTotals();
+            UpdateBloodTotals();
         }
 
         // Event handler for search button click
@@ -342,7 +365,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         }
 
         // Method to calculate total amounts for each blood type
-        private void CalculateBloodTotals()
+        private void UpdateBloodTotals()
         {
             // Reset total amounts for each blood type
             foreach (var bloodTotal in BloodTotals)
