@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace SCE24_BioMedSW_Blood_Establishment_WPF
 {
+    // Utility class for common methods
     internal class Util
     {
+        // Method to validate Israeli ID number
         public static bool IsValidIsraeliIDNumber(string id)
         {
             if (id.Length > 9) return false;

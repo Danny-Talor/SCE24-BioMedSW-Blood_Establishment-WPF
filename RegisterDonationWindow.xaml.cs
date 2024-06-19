@@ -1,19 +1,25 @@
-﻿using System;
+﻿// RegisterDonationWindow.xaml.cs
+
+using System;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 namespace SCE24_BioMedSW_Blood_Establishment_WPF
 {
+    /// <summary>
+    /// Interaction logic for RegisterDonationWindow.xaml
+    /// </summary>
     public partial class RegisterDonationWindow : Window
     {
+        // Event for submitting a donation
         public event EventHandler<Donation> DonationSubmitted;
+
+        // Collection of existing donations
         private ObservableCollection<Donation> Donations { get; set; }
 
+        // Constructor
         public RegisterDonationWindow(ObservableCollection<Donation> donations)
         {
             InitializeComponent();
@@ -21,6 +27,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             IdentificationNumberTextBox.TextChanged += IdentificationNumberTextBox_TextChanged;
         }
 
+        // Event handler for Submit button click
         private void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
             if (ValidateInputs())
@@ -33,11 +40,13 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     DonationDates = { DonationDatePicker.SelectedDate ?? DateTime.Now }
                 };
 
+                // Invoke donation submitted event
                 DonationSubmitted?.Invoke(this, donation);
                 Close();
             }
         }
 
+        // Method to validate input fields
         private bool ValidateInputs()
         {
             bool isValid = true;
@@ -96,24 +105,29 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             return isValid;
         }
 
+        // Event handler for Identification Number text box text changed
         private void IdentificationNumberTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string identificationNumber = IdentificationNumberTextBox.Text;
 
             if (!string.IsNullOrWhiteSpace(identificationNumber))
             {
+                // Check if the identification number already exists in donations
                 Donation existingDonation = Donations.FirstOrDefault(d => d.IdentificationNumber == identificationNumber);
 
                 if (existingDonation != null)
                 {
+                    // If exists, populate full name and blood type fields
                     FullNameTextBox.Text = existingDonation.FullName;
                     BloodTypeComboBox.SelectedItem = BloodTypeComboBox.Items.Cast<ComboBoxItem>().FirstOrDefault(item => item.Content.ToString() == existingDonation.BloodType);
 
+                    // Disable full name and blood type fields
                     FullNameTextBox.IsEnabled = false;
                     BloodTypeComboBox.IsEnabled = false;
                 }
                 else
                 {
+                    // If not exists, clear fields and enable them
                     FullNameTextBox.Text = string.Empty;
                     BloodTypeComboBox.SelectedItem = null;
                     DonationDatePicker.SelectedDate = null;
@@ -125,6 +139,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             }
         }
 
+        // Event handler for Image ToolTip opening
         private void Image_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
 
