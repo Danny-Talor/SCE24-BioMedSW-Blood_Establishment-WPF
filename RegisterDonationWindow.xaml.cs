@@ -1,23 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Controls.Primitives;
 
 namespace SCE24_BioMedSW_Blood_Establishment_WPF
 {
-    /// <summary>
-    /// Interaction logic for RegisterDonationWindow.xaml
-    /// </summary>
     public partial class RegisterDonationWindow : Window
     {
         public event EventHandler<Donation> DonationSubmitted;
@@ -49,15 +40,60 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
 
         private bool ValidateInputs()
         {
-            if (string.IsNullOrEmpty(FullNameTextBox.Text) ||
-                string.IsNullOrWhiteSpace(IdentificationNumberTextBox.Text) ||
-                BloodTypeComboBox.SelectedItem == null ||
-                DonationDatePicker.SelectedDate == null)
+            bool isValid = true;
+
+            // Validate Full Name
+            string fullName = FullNameTextBox.Text;
+            if (string.IsNullOrEmpty(fullName) || !Regex.IsMatch(fullName, @"^[A-Z][a-zA-Z]{1,20}(?: [A-Z][a-zA-Z]{1,20}){0,2}$"))
             {
-                MessageBox.Show("Please fill in all fields.", "Validation Error");
-                return false;
+                FullNameError.Text = "Full name invalid";
+                FullNameError.Visibility = Visibility.Visible;
+                isValid = false;
             }
-            return true;
+            else
+            {
+                FullNameError.Visibility = Visibility.Collapsed;
+            }
+
+            // Validate Identification Number
+            string idNumber = IdentificationNumberTextBox.Text;
+            if (string.IsNullOrEmpty(idNumber) || !Util.IsValidIsraeliIDNumber(idNumber))
+            {
+                IdNumberError.Text = "Invalid Israeli ID number.";
+                IdNumberError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                IdNumberError.Visibility = Visibility.Collapsed;
+            }
+
+            // Validate Blood Type
+            if (BloodTypeComboBox.SelectedItem == null)
+            {
+                BloodTypeError.Text = "Please select a blood type.";
+                BloodTypeError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                BloodTypeError.Visibility = Visibility.Collapsed;
+            }
+
+            // Validate Donation Date
+            DateTime? selectedDate = DonationDatePicker.SelectedDate;
+            if (selectedDate == null || selectedDate > DateTime.Today)
+            {
+                DateError.Text = "Please select a valid date.";
+                DateError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                DateError.Visibility = Visibility.Collapsed;
+            }
+
+            return isValid;
         }
 
         private void IdentificationNumberTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -89,5 +125,9 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             }
         }
 
+        private void Image_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+
+        }
     }
 }
