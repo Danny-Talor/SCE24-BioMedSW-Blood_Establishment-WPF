@@ -138,11 +138,5 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 }
             }
         }
-
-        // Event handler for Image ToolTip opening
-        private void Image_ToolTipOpening(object sender, ToolTipEventArgs e)
-        {
-
-        }
     }
 }
