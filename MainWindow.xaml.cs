@@ -162,7 +162,8 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         // Event handler for the "Send donation" button (not implemented yet)
         private void SendDonationButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("In development", "Send donation");
+            var registerWindow = new SendDonationWindow();
+            registerWindow.ShowDialog();
         }
 
         // Event handler for the "Mass Casualty Incident" button (not implemented yet)
