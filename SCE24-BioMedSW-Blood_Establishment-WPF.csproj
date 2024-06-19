@@ -7,10 +7,15 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>bin\blood_icon_149283.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="letter_i_PNG67.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="bin\blood_icon_149283.ico" />
   </ItemGroup>
 
   <ItemGroup>
