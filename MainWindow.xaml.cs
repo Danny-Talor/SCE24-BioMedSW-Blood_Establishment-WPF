@@ -108,45 +108,56 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         // Event handler for populating the table with random data
         private void PopulateTable_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult result = MessageBox.Show("Click Yes to populate one of each blood type, Click No to populate randomly",
+                                                     "Populate",
+                                                     MessageBoxButton.YesNoCancel,
+                                                     MessageBoxImage.Warning);
             Random random = new Random();
             int DonationCount = 0;
+            string[] bloodTypes = { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" };
+            string[] fullNames = { "John Doe", "Jane Smith", "Michael Johnson", "Emily Brown", "Robert Williams" };
 
-            // Generate 10 random donations
-            for (int i = 0; i < 10; i++)
+            if (result == MessageBoxResult.Yes)
             {
-                // Generate random valid Israeli identification number
-                string identificationNumber = random.Next(100000000, 1000000000).ToString();
-                while (!Util.IsValidIsraeliIDNumber(identificationNumber))
+                // Populate one donation for each blood type
+                foreach (var bloodType in bloodTypes)
                 {
-                    identificationNumber = random.Next(100000000, 1000000000).ToString();
-                }
-
-                // Generate random full name
-                string[] fullNames = { "John Doe", "Jane Smith", "Michael Johnson", "Emily Brown", "Robert Williams" };
-                string fullName = fullNames[random.Next(0, fullNames.Length)];
-
-                // Generate random blood type
-                string[] bloodTypes = { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" };
-                string bloodType = bloodTypes[random.Next(0, bloodTypes.Length)];
-
-                // Generate random donation dates
-                List<DateTime> donationDates = new List<DateTime>();
-                int numDates = random.Next(1, 4); // Randomly choose 1 to 3 dates
-                for (int j = 0; j < numDates; j++)
-                {
+                    string identificationNumber = Util.GetRandomIsraeliIDNumber();
+                    string fullName = fullNames[random.Next(0, fullNames.Length)];
                     DateTime date = DateTime.Now.AddDays(-random.Next(1, 100)); // Random date within the last 100 days
-                    donationDates.Add(date);
-                    DonationCount++;
+                    Donation newDonation = new Donation(fullName, identificationNumber, bloodType, 1, new List<DateTime> { date });
+                    Donations.Add(newDonation);
                 }
+            }
+            else if (result == MessageBoxResult.No)
+            {
+                // Generate 10 random donations
+                for (int i = 0; i < 10; i++)
+                {
+                    string identificationNumber = Util.GetRandomIsraeliIDNumber();
+                    string fullName = fullNames[random.Next(0, fullNames.Length)];
+                    string bloodType = bloodTypes[random.Next(0, bloodTypes.Length)];
 
-                // Create new Donation object
-                Donation newDonation = new Donation(fullName, identificationNumber, bloodType, DonationCount, donationDates);
+                    List<DateTime> donationDates = new List<DateTime>();
+                    int numDates = random.Next(1, 4); // Randomly choose 1 to 3 dates
+                    for (int j = 0; j < numDates; j++)
+                    {
+                        DateTime date = DateTime.Now.AddDays(-random.Next(1, 100)); // Random date within the last 100 days
+                        donationDates.Add(date);
+                        DonationCount++;
+                    }
 
-                // Add to ObservableCollection
-                Donations.Add(newDonation);
+                    Donation newDonation = new Donation(fullName, identificationNumber, bloodType, DonationCount, donationDates);
+                    Donations.Add(newDonation);
 
-                // Reset DonationCount for next iteration
-                DonationCount = 0;
+                    // Reset DonationCount for next iteration
+                    DonationCount = 0;
+                }
+            }
+            else
+            {
+                // User clicked Cancel or closed the MessageBox
+                return;
             }
 
             // Refresh DataGrid
@@ -156,7 +167,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             UpdateBloodTotals();
 
             // Update status message
-            StatusTextBlock.Text = "Table populated with random data.";
+            StatusTextBlock.Text = "Table populated with data.";
         }
 
         // Event handler for the "Send donation" button (not implemented yet)

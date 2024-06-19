@@ -118,6 +118,16 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             return (counter % 10 == 0);
         }
 
-        
+        // Generate random valid Israeli identification number
+        public static string GetRandomIsraeliIDNumber()
+        {
+            Random random = new Random();
+            string identificationNumber = random.Next(100000000, 1000000000).ToString();
+            while (!Util.IsValidIsraeliIDNumber(identificationNumber))
+            {
+                identificationNumber = random.Next(100000000, 1000000000).ToString();
+            }
+            return identificationNumber;
+        }
     }
 }
