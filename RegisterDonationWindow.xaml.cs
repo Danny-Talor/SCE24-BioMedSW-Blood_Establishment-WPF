@@ -138,5 +138,10 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 }
             }
         }
+
+        private void GenerateIDNumberButton_Click(object sender, RoutedEventArgs e)
+        {
+            IdentificationNumberTextBox.Text = Util.GetRandomIsraeliIDNumber();
+        }
     }
 }

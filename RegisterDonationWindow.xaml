@@ -15,19 +15,27 @@
         </StackPanel>
         <TextBlock x:Name="IdNumberError" Foreground="Red" Visibility="Collapsed"/>
 
-        <TextBox x:Name="IdentificationNumberTextBox" Margin="0,0,0,10">
-            <TextBox.Style>
-                <Style TargetType="TextBox">
-                    <Style.Triggers>
-                        <Trigger Property="Validation.HasError" Value="true">
-                            <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
-                            <Setter Property="BorderBrush" Value="Red"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBox.Style>
-        </TextBox>
-
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBox Grid.Column="0" x:Name="IdentificationNumberTextBox">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Style.Triggers>
+                            <Trigger Property="Validation.HasError" Value="true">
+                                <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                                <Setter Property="BorderBrush" Value="Red"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <Button Grid.Column="1" Click="GenerateIDNumberButton_Click" Height="20" VerticalAlignment="Top">Generate</Button>
+        </Grid>
+        
         <!-- Full Name -->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Full name"/>
