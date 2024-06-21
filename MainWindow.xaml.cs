@@ -35,6 +35,20 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             this.DonationCount = Amount;
             this.DonationDates = DonationDates;
         }
+
+        public void RemoveDonations(int count)
+        {
+            if (count >= DonationCount)
+            {
+                DonationCount = 0;
+                DonationDates.Clear();
+            }
+            else
+            {
+                DonationCount -= count;
+                DonationDates = DonationDates.OrderBy(d => d).Skip(count).ToList();
+            }
+        }
     }
 
     // Represents aggregated total amounts of each blood type
@@ -175,6 +189,10 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         {
             var registerWindow = new SendDonationWindow(Donations);
             registerWindow.ShowDialog();
+
+            // Refresh data after sending donation
+            DonationsDataGrid.Items.Refresh();
+            UpdateBloodTotals();
         }
 
         // Event handler for the "Mass Casualty Incident" button (not implemented yet)
@@ -235,14 +253,21 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         {
             if (sender is Button button && button.DataContext is Donation donation)
             {
-                // Sort donation dates by date
-                var sortedDates = donation.DonationDates.OrderBy(d => d).ToList();
+                if (donation.DonationDates.Any())
+                {
+                    // Sort donation dates by date
+                    var sortedDates = donation.DonationDates.OrderBy(d => d).ToList();
 
-                // Create formatted string with sorted dates
-                var datesString = string.Join("\n", sortedDates.Select(d => d.ToShortDateString()));
+                    // Create formatted string with sorted dates
+                    var datesString = string.Join("\n", sortedDates.Select(d => d.ToShortDateString()));
 
-                // Show MessageBox with sorted donation dates
-                MessageBox.Show($"Donation dates for {donation.FullName}:\n\n{datesString}", "Donation Dates");
+                    // Show MessageBox with sorted donation dates
+                    MessageBox.Show($"Donation dates for {donation.FullName}:\n\n{datesString}", "Donation Dates");
+                }
+                else
+                {
+                    MessageBox.Show($"No donation dates available for {donation.FullName}", "Donation Dates");
+                }
             }
         }
 
