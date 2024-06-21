@@ -39,7 +39,7 @@
         <!-- Full Name -->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Full name"/>
-            <Image ToolTip="Must be in the format of first name last name, middle name optional." Source="/letter_i_PNG67.png" Width="15" Height="15" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="5,0,0,0"/>
+            <Image ToolTip="First name and last name, Middle name optional." Source="/letter_i_PNG67.png" Width="15" Height="15" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="5,0,0,0"/>
         </StackPanel>
         <TextBlock x:Name="FullNameError" Foreground="Red" Visibility="Collapsed"/>
 

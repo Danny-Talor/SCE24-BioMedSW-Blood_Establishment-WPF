@@ -34,7 +34,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             {
                 var donation = new Donation
                 {
-                    FullName = FullNameTextBox.Text,
+                    FullName = Util.ToTitleCase(FullNameTextBox.Text),
                     IdentificationNumber = IdentificationNumberTextBox.Text,
                     BloodType = (BloodTypeComboBox.SelectedItem as ComboBoxItem)?.Content.ToString(),
                     DonationDates = { DonationDatePicker.SelectedDate ?? DateTime.Now }
@@ -53,7 +53,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
 
             // Validate Full Name
             string fullName = FullNameTextBox.Text;
-            if (string.IsNullOrEmpty(fullName) || !Regex.IsMatch(fullName, @"^[A-Z][a-zA-Z]{1,20}(?: [A-Z][a-zA-Z]{1,20}){0,2}$"))
+            if (string.IsNullOrEmpty(fullName) || !Regex.IsMatch(fullName, @"^[a-zA-Z]{2,100}(?: [a-zA-Z]{2,100}){1,2}$"))
             {
                 FullNameError.Text = "Full name invalid";
                 FullNameError.Visibility = Visibility.Visible;

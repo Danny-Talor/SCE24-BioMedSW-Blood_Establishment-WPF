@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -128,6 +129,23 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 identificationNumber = random.Next(100000000, 1000000000).ToString();
             }
             return identificationNumber;
+        }
+
+        // turn string into TitleCase
+        public static string ToTitleCase(string input)
+        {
+            TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+            string[] words = input.ToLower().Split(' ');
+
+            for (int i = 0; i < words.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(words[i]))
+                {
+                    words[i] = textInfo.ToTitleCase(words[i]);
+                }
+            }
+
+            return string.Join(" ", words);
         }
     }
 }
