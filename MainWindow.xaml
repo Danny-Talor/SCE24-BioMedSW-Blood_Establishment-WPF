@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCE24_BioMedSW_Blood_Establishment_WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="650">
+        Title="Blood Establishment Computer Software" Height="600" Width="650">
     <!-- Grid layout for MainWindow -->
     <Grid>
         <!-- Row definitions for different sections -->
