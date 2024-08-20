@@ -64,17 +64,4 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             TotalAmount = totalAmount;
         }
     }
-
-    // Serializable class to hold list of donations
-    [Serializable]
-    public class DonationData
-    {
-        public List<Donation> Donations { get; set; }
-
-        // Default constructor initializes donations list
-        public DonationData()
-        {
-            Donations = new List<Donation>();
-        }
-    }
 }

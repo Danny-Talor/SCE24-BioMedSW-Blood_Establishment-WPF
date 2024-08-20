@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 
 namespace SCE24_BioMedSW_Blood_Establishment_WPF
@@ -9,16 +10,24 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
     // Main window class for the WPF application
     public partial class MainWindow : Window
     {
+        // Application Data
+        public ApplicationData ApplicationData { get; set; }
+
         // Observable collections for donations and blood type totals
         public ObservableCollection<Donation> Donations { get; set; }
         public ObservableCollection<BloodTotal> BloodTotals { get; set; }
+
+        // Strings
         private const string SearchBarPlaceholderText = "Search...";
+        private string CurrentUser = "N/A";
 
         // Constructor initializes components and collections
         public MainWindow()
         {
             InitializeComponent();
+            ApplicationData = ApplicationData.LoadApplicationData();
             Donations = new ObservableCollection<Donation>();
+
             // Initialize BloodTotals with default values for each blood type
             BloodTotals = new ObservableCollection<BloodTotal>
             {
@@ -31,11 +40,15 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 new BloodTotal("O-", 0),
                 new BloodTotal("O+", 0)
             };
+
             // Set data sources for DataGrids
             DonationsDataGrid.ItemsSource = Donations;
             TotalBloodDataGrid.ItemsSource = BloodTotals;
-            // Load existing donations and handle window closing event
+
+            // Load existing donations if exists
             LoadDonations();
+
+            // Handle window closing event
             Closing += MainWindow_Closing;
         }
 
@@ -55,7 +68,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                                                      MessageBoxButton.YesNoCancel,
                                                      MessageBoxImage.Warning);
             Random random = new Random();
-            int DonationCount = 0;
+            int donationCount = 0;
             string[] bloodTypes = { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" };
             string[] fullNames = { "John Doe", "Jane Smith", "Michael Johnson", "Emily Brown", "Robert Williams" };
 
@@ -69,6 +82,18 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     DateTime date = DateTime.Now.AddDays(-random.Next(1, 100)); // Random date within the last 100 days
                     Donation newDonation = new Donation(fullName, identificationNumber, bloodType, 1, new List<DateTime> { date });
                     Donations.Add(newDonation);
+                    // Add new donation to application data
+                    ApplicationData.Donations.Add(newDonation);
+                    // Log the new donation
+                    var donationLog = new DonationLog
+                    {
+                        FullName = newDonation.FullName,
+                        IdentificationNumber = newDonation.IdentificationNumber,
+                        BloodType = newDonation.BloodType,
+                        DonationDate = newDonation.DonationDates.Last(),
+                        RegisteredBy = CurrentUser
+                    };
+                    ApplicationData.Logs.Donations.Add(donationLog);
                 }
             }
             else if (result == MessageBoxResult.No)
@@ -81,19 +106,35 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     string bloodType = bloodTypes[random.Next(0, bloodTypes.Length)];
 
                     List<DateTime> donationDates = new List<DateTime>();
-                    int numDates = random.Next(1, 4); // Randomly choose 1 to 3 dates
+                    int numDates = random.Next(1, 5); // Randomly choose 1 to 4 dates
                     for (int j = 0; j < numDates; j++)
                     {
                         DateTime date = DateTime.Now.AddDays(-random.Next(1, 100)); // Random date within the last 100 days
                         donationDates.Add(date);
-                        DonationCount++;
+                        donationCount++;
                     }
 
-                    Donation newDonation = new Donation(fullName, identificationNumber, bloodType, DonationCount, donationDates);
+                    Donation newDonation = new Donation(fullName, identificationNumber, bloodType, donationCount, donationDates);
                     Donations.Add(newDonation);
+                    // Add new donation to application data
+                    ApplicationData.Donations.Add(newDonation);
 
-                    // Reset DonationCount for next iteration
-                    DonationCount = 0;
+                    // Log each date as a separate donation log entry
+                    foreach (var date in donationDates)
+                    {
+                        var donationLog = new DonationLog
+                        {
+                            FullName = newDonation.FullName,
+                            IdentificationNumber = newDonation.IdentificationNumber,
+                            BloodType = newDonation.BloodType,
+                            DonationDate = date,
+                            RegisteredBy = CurrentUser
+                        };
+                        ApplicationData.Logs.Donations.Add(donationLog);
+                    }
+
+                    // Reset donationCount for next iteration
+                    donationCount = 0;
                 }
             }
             else
@@ -110,12 +151,15 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
 
             // Update status message
             StatusTextBlock.Text = "Table populated with data.";
+
+            // Save application data
+            ApplicationData.SaveApplicationData(ApplicationData);
         }
 
         // Event handler for the "Send donation" button (not implemented yet)
         private void SendDonationButton_Click(object sender, RoutedEventArgs e)
         {
-            var registerWindow = new SendDonationWindow(Donations);
+            var registerWindow = new SendDonationWindow(Donations, CurrentUser, ApplicationData);
             registerWindow.ShowDialog();
 
             // Refresh data after sending donation
@@ -123,32 +167,56 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             UpdateBloodTotals();
         }
 
-        // Event handler for the "Mass Casualty Incident" button (not implemented yet)
+        // Event handler for the "Mass Casualty Incident" button
         private void MassCasualtyIncidentButton_Click(object sender, RoutedEventArgs e)
         {
-            // Confirmation message box
-            MessageBoxResult result = MessageBox.Show("You are about to send all available O- blood type donations to the mass casualty incident. Continue?",
-                                                      "Mass Casualty Incident",
-                                                      MessageBoxButton.OKCancel,
-                                                      MessageBoxImage.Warning);
-
-            if (result == MessageBoxResult.OK)
+            var oNegativeDonations = Donations.Where(d => d.BloodType == "O-").ToList();
+            if (oNegativeDonations.Count > 0)
             {
-                // Delete all O- donations from the collection
-                var oNegativeDonations = Donations.Where(d => d.BloodType == "O-").ToList();
-                foreach (var donation in oNegativeDonations)
+                // Confirmation message box
+                MessageBoxResult result = MessageBox.Show("You are about to send all available O- blood type donations to the mass casualty incident. Continue?",
+                                                          "Mass Casualty Incident",
+                                                          MessageBoxButton.OKCancel,
+                                                          MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.OK)
                 {
-                    Donations.Remove(donation);
+                    // Log the amount of O- blood to be sent
+                    int amountSent = oNegativeDonations.Sum(d => d.DonationCount);
+
+                    // Delete all O- donations from the collection
+                    foreach (var donation in oNegativeDonations)
+                    {
+                        Donations.Remove(donation);
+                    }
+
+                    // Create a new MCI log entry
+                    var mciLog = new MCILog
+                    {
+                        AmountSent = amountSent,
+                        Timestamp = DateTime.Now,
+                        User = CurrentUser
+                    };
+
+                    // Add MCI log to the application data
+                    ApplicationData.Logs.MCIs.Add(mciLog);
+
+                    // Save application data
+                    ApplicationData.SaveApplicationData(ApplicationData);
+
+                    // Refresh DonationsDataGrid
+                    DonationsDataGrid.Items.Refresh();
+
+                    // Update blood totals
+                    UpdateBloodTotals();
+
+                    // Update status message
+                    StatusTextBlock.Text = "MCI completed.";
                 }
-
-                // Refresh DonationsDataGrid
-                DonationsDataGrid.Items.Refresh();
-
-                // Update blood totals
-                UpdateBloodTotals();
-
-                // Update status message
-                StatusTextBlock.Text = "MCI completed.";
+            }
+            else
+            {
+                MessageBox.Show("No O- blood to send!");
             }
         }
 
@@ -167,13 +235,28 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             {
                 // Add new donation to ObservableCollection
                 Donations.Add(donation);
+                ApplicationData.Donations.Add(donation);
             }
 
-            // Refresh DataGrids and recalculate blood totals
+            // Log the new donation
+            var donationLog = new DonationLog
+            {
+                FullName = donation.FullName,
+                IdentificationNumber = donation.IdentificationNumber,
+                BloodType = donation.BloodType,
+                DonationDate = donation.DonationDates.Last(),
+                RegisteredBy = CurrentUser
+            };
+            ApplicationData.Logs.Donations.Add(donationLog);
+
+            // Refresh DataGrids 
             DonationsDataGrid.Items.Refresh();
+
+            // Recalculate blood totals
             UpdateBloodTotals();
-            // Save donations to file
-            SaveDonations();
+
+            // Save donation
+            ApplicationData.SaveApplicationData(ApplicationData);
         }
 
         // Event handler to show donation dates for a specific donation
@@ -199,68 +282,20 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             }
         }
 
-        // Method to save donations to XML file
-        private void SaveDonations()
-        {
-            try
-            {
-                // Get path to AppData folder
-                string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                string filePath = Path.Combine(appDataFolder, "donations.xml");
-
-                // Create DonationData object with current donations
-                DonationData donationData = new DonationData
-                {
-                    Donations = new List<Donation>(Donations)
-                };
-
-                // Serialize DonationData object to XML and save to file
-                XmlSerializer serializer = new XmlSerializer(typeof(DonationData));
-                using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    serializer.Serialize(fileStream, donationData);
-                }
-
-                // Update status message on successful save
-                StatusTextBlock.Text = "Donations updated successfully.";
-            }
-            catch (Exception ex)
-            {
-                // Show error message if saving fails
-                MessageBox.Show($"An error occurred while saving donations: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                StatusTextBlock.Text = "Error saving donations.";
-            }
-        }
-
         // Method to load donations from XML file
         private void LoadDonations()
         {
             try
             {
-                // Get path to AppData folder
-                string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                string filePath = Path.Combine(appDataFolder, "donations.xml");
+                // Populate ObservableCollection with deserialized donations
+                Donations = new ObservableCollection<Donation>(ApplicationData.Donations);
+                DonationsDataGrid.ItemsSource = Donations;
 
-                // If donations file exists, deserialize it
-                if (File.Exists(filePath))
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(DonationData));
-                    using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
-                    {
-                        DonationData donationData = (DonationData)serializer.Deserialize(fileStream);
-                        // Populate ObservableCollection with deserialized donations
-                        Donations = new ObservableCollection<Donation>(donationData.Donations);
-                        DonationsDataGrid.ItemsSource = Donations;
-                    }
-
-                    // Update status message on successful load
-                    StatusTextBlock.Text = "Donations loaded successfully.";
-                }
+                // Update status message on successful load
+                StatusTextBlock.Text = "Donations loaded successfully.";
             }
             catch (Exception ex)
             {
-                // Show error message if loading fails
-                MessageBox.Show($"An error occurred while loading donations: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 StatusTextBlock.Text = "Error loading donations.";
             }
 
@@ -325,7 +360,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // Save donations when window is closing
-            SaveDonations();
+            ApplicationData.SaveApplicationData(ApplicationData);
         }
 
         // Method to calculate total amounts for each blood type
@@ -350,5 +385,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             // Refresh total blood data grid to reflect updated totals
             TotalBloodDataGrid.Items.Refresh();
         }
+
+
     }
 }
