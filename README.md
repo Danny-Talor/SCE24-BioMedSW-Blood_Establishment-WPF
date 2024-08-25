@@ -9,6 +9,9 @@ Created using Windows Presentation Foundation, with XAML for front-end and C# fo
 ### Usage instructions
 After downloading `SCE24-BioMedSW-Blood_Establishment-WPF.zip`, extract it anywhere and run `SCE24-BioMedSW-Blood_Establishment-WPF.exe`, the program is self contained so you don't need to install anything. In order for the program's data to persist on the machine, a file named `SCE24-BioMedSW-BECS-data.xml` is created in `%localappdata%` (`C:\Users\user\AppData\Local\SCE24-BioMedSW-BECS-data.xml`).
 
+### Required packages
+`ClosedXML` - Installed using the NuGet Package Manager
+
 ### Build instructions
 After cloning the repository, open the solution/project with Visual Studio. Open the terminal and run `dotnet publish -c Release --self-contained -p:PublishSingleFile=true`. The build files should be in `<project directory>\bin\Release\net8.0-windows\win-x64\publish`, .pdb file is optional.
 

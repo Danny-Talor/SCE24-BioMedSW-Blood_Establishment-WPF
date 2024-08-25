@@ -7,8 +7,6 @@ using System.Xml.Serialization;
 [Serializable]
 public class ApplicationData
 {
-    private const string ApplicationDataFileName = "SCE24-BioMedSW-BECS-data.xml";
-
     public List<Donation> Donations { get; set; }
     public Logs Logs { get; set; }
 
@@ -19,17 +17,11 @@ public class ApplicationData
         Logs = new Logs();
     }
 
-    private static string GetDataFilePath()
-    {
-        string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData); // Get path to AppData folder
-        return Path.Combine(appDataFolder, ApplicationDataFileName); // Return the full path to the application data file
-    }
-
     public static void SaveApplicationData(ApplicationData data)
     {
         XmlSerializer serializer = new XmlSerializer(typeof(ApplicationData));
 
-        using (FileStream fileStream = new FileStream(GetDataFilePath(), FileMode.Create))
+        using (FileStream fileStream = new FileStream(Util.GetDataFilePath(Util.DataType.APPDATA), FileMode.Create))
         {
             serializer.Serialize(fileStream, data);
         }
@@ -40,7 +32,7 @@ public class ApplicationData
         try
         {
             XmlSerializer serializer = new XmlSerializer(typeof(ApplicationData));
-            using (FileStream fileStream = new FileStream(GetDataFilePath(), FileMode.Open))
+            using (FileStream fileStream = new FileStream(Util.GetDataFilePath(Util.DataType.APPDATA), FileMode.Open))
             {
                 return (ApplicationData)serializer.Deserialize(fileStream);
             }
@@ -60,12 +52,15 @@ public class Logs
     public List<BloodTransferLog> BloodTransfers { get; set; }
     public List<MCILog> MCIs { get; set; }
 
+    public List<ExportLog> Exports { get; set; }
+
     // Default constructor initializes the lists
     public Logs()
     {
         Donations = new List<DonationLog>();
         BloodTransfers = new List<BloodTransferLog>();
         MCIs = new List<MCILog>();
+        Exports = new List<ExportLog>();
     }
 }
 
@@ -97,6 +92,13 @@ public class BloodTransferLog
 public class MCILog
 {
     public int AmountSent { get; set; }
+    public DateTime Timestamp { get; set; }
+    public string User { get; set; }
+}
+
+[Serializable]
+public class ExportLog
+{ 
     public DateTime Timestamp { get; set; }
     public string User { get; set; }
 }

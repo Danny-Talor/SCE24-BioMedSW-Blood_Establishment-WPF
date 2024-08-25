@@ -1,8 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace SCE24_BioMedSW_Blood_Establishment_WPF
@@ -386,6 +389,52 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             TotalBloodDataGrid.Items.Refresh();
         }
 
+        private void Export_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Create a new export log entry
+                var exportLog = new ExportLog
+                {
+                    Timestamp = DateTime.Now,
+                    User = CurrentUser
+                };
 
+                // Add MCI log to the application data
+                ApplicationData.Logs.Exports.Add(exportLog);
+
+                // Save application data
+                ApplicationData.SaveApplicationData(ApplicationData);
+
+                Util.ExportLogs();
+
+                StatusTextBlock.Text = "Logs exported successfuly.";
+
+                MessageBoxResult result = MessageBox.Show("Export successful! Would you like to view the file?",
+                                                     "Exported logs",
+                                                     MessageBoxButton.YesNo,
+                                                     MessageBoxImage.Information);
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Open the Excel file with the default application
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = Util.GetDataFilePath(Util.DataType.EXPORTDATA),
+                        UseShellExecute = true // This ensures the file opens with its associated application
+                    });
+                }
+
+            }
+            catch (ApplicationException ex)
+            {
+                MessageBox.Show(ex.Message, "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                
+                // Delete new export log entry
+                ApplicationData.Logs.Exports.RemoveAt(ApplicationData.Logs.Exports.Count - 1);
+
+                // Save application data
+                ApplicationData.SaveApplicationData(ApplicationData);
+            }
+        }
     }
 }

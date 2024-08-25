@@ -2,15 +2,30 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Xml.Linq;
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace SCE24_BioMedSW_Blood_Establishment_WPF
 {
     // Utility class for common methods
     internal class Util
     {
+        public enum DataType
+        {
+            APPDATA,
+            EXPORTDATA,
+        }
+
+        // Define default application data file names
+        public const string ApplicationDataFileName = "SCE24-BioMedSW-BECS-data.xml";
+        public const string ExportDataFileName = "SCE24-BioMedSW-BECS-exported.xlsx";
+
         // Define a dictionary to map recipient blood types to compatible donor blood types
         static readonly Dictionary<string, string[]> donorBloodTypes = new Dictionary<string, string[]>
     {
@@ -146,6 +161,131 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             }
 
             return string.Join(" ", words);
+        }
+        public static string GetDataFilePath(DataType type)
+        {
+            string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData); // Get path to AppData folder
+            if (type == DataType.APPDATA)
+            {
+                return Path.Combine(appDataFolder, ApplicationDataFileName); // Return the full path to the application data file
+            }
+            else if (type == DataType.EXPORTDATA)
+            {
+                return Path.Combine(appDataFolder, ExportDataFileName); // Return the full path to the application data file
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public static void ExportLogs()
+        {
+            try
+            {
+                // Load the XML data
+                XDocument xmlDoc = XDocument.Load(GetDataFilePath(DataType.APPDATA));
+                XElement logsElement = xmlDoc.Element("ApplicationData")?.Element("Logs");
+
+                if (logsElement == null)
+                {
+                    throw new Exception("Logs element not found in the XML.");
+                }
+
+                // Create a new Excel workbook
+                using (var workbook = new XLWorkbook())
+                {
+                    // Export Donations logs
+                    var donationsLogs = logsElement.Element("Donations")?.Elements("DonationLog");
+                    if (donationsLogs != null && donationsLogs.Any())
+                    {
+                        var donationsSheet = workbook.Worksheets.Add("Donations");
+                        int row = 1;
+                        foreach (var log in donationsLogs)
+                        {
+                            donationsSheet.Cell(row, 1).Value = log.Element("FullName")?.Value;
+                            donationsSheet.Cell(row, 2).Value = log.Element("IdentificationNumber")?.Value;
+                            donationsSheet.Cell(row, 3).Value = log.Element("BloodType")?.Value;
+                            donationsSheet.Cell(row, 4).Value = TimestampStringNormalize(log.Element("DonationDate")?.Value);
+                            donationsSheet.Cell(row, 5).Value = log.Element("RegisteredBy")?.Value;
+                            row++;
+                        }
+                    }
+
+                    // Export Blood Transfers logs
+                    var bloodTransfersLogs = logsElement.Element("BloodTransfers")?.Elements("BloodTransferLog");
+                    if (bloodTransfersLogs != null && bloodTransfersLogs.Any())
+                    {
+                        var bloodTransfersSheet = workbook.Worksheets.Add("Blood Transfers");
+                        int row = 1;
+                        foreach (var log in bloodTransfersLogs)
+                        {
+                            bloodTransfersSheet.Cell(row, 1).Value = log.Element("Donor")?.Value;
+                            bloodTransfersSheet.Cell(row, 2).Value = log.Element("ID")?.Value;
+                            bloodTransfersSheet.Cell(row, 3).Value = log.Element("BloodType")?.Value;
+                            bloodTransfersSheet.Cell(row, 4).Value = log.Element("RequestedBloodType")?.Value;
+                            bloodTransfersSheet.Cell(row, 5).Value = log.Element("RequestedAmount")?.Value;
+                            bloodTransfersSheet.Cell(row, 6).Value = log.Element("TransferredAmount")?.Value;
+                            bloodTransfersSheet.Cell(row, 7).Value = log.Element("RequestedDepartment")?.Value;
+                            bloodTransfersSheet.Cell(row, 8).Value = TimestampStringNormalize(log.Element("Timestamp")?.Value);
+                            bloodTransfersSheet.Cell(row, 9).Value = log.Element("User")?.Value;
+                            row++;
+                        }
+                    }
+
+                    // Export Mass Casualty Incidents logs
+                    var mciLogs = logsElement.Element("MCIs")?.Elements("MCILog");
+                    if (mciLogs != null && mciLogs.Any())
+                    {
+                        var mciSheet = workbook.Worksheets.Add("Mass Casualty Incidents");
+
+                        int row = 1;
+                        foreach (var log in mciLogs)
+                        {
+                            mciSheet.Cell(row, 1).Value = log.Element("AmountSent")?.Value;
+                            mciSheet.Cell(row, 2).Value = TimestampStringNormalize(log.Element("Timestamp")?.Value);
+                            mciSheet.Cell(row, 3).Value = log.Element("User")?.Value;
+                            row++;
+                        }
+                    }
+
+                    // Export export logs
+                    var exportLogs = logsElement.Element("Exports")?.Elements("ExportLog");
+                    if (exportLogs != null && exportLogs.Any())
+                    {
+                        var exportsSheet = workbook.Worksheets.Add("Logged Exports");
+
+                        int row = 1;
+                        foreach (var log in exportLogs)
+                        {
+                            exportsSheet.Cell(row, 1).Value = TimestampStringNormalize(log.Element("Timestamp")?.Value);
+                            exportsSheet.Cell(row, 2).Value = log.Element("User")?.Value;
+                            row++;
+                        }
+                    }
+
+                    // Save the workbook to the specified path
+                    workbook.SaveAs(GetDataFilePath(DataType.EXPORTDATA));
+                }
+            }
+            catch (IOException ioEx)
+            {
+                throw new ApplicationException($"Please ensure the file is not open and try again.", ioEx);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred: {ex.Message}", ex);
+            }
+
+        }
+
+
+        public static string TimestampStringNormalize(string timestamp)
+        {
+            DateTime value;
+            if (DateTime.TryParse(timestamp,out value)) return value.ToString("dd.MM.yyyy HH:mm:ss");
+            else return "?";
+
         }
     }
 }

@@ -13,6 +13,7 @@
   <ItemGroup>
     <None Remove="green_arrow_left.png" />
     <None Remove="letter_i_PNG67.png" />
+    <None Remove="microsoft_excel_logo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,10 +23,15 @@
   <ItemGroup>
     <Resource Include="green_arrow_left.png" />
     <Resource Include="letter_i_PNG67.png" />
+    <Resource Include="microsoft_excel_logo.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="bin\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.3" />
   </ItemGroup>
 
 </Project>
