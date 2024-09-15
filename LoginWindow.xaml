@@ -21,7 +21,7 @@
 
 
 
-        <Image Grid.Row="0" Source="/login_window_logo.png" Stretch="Fill"/>
+        <Image Grid.Row="0" Stretch="Fill" Source="/Assets/login_window_logo.png"/>
         <TextBlock Grid.Row="1" Text="" Margin="0,0,0,0"/>
         <TextBlock Grid.Row="2" Text="Username:" Margin="0,0,0,5" FontWeight="Bold"/>
         <TextBox Grid.Row="3" Name="usernameTextBox"  Margin="0,0,0,10" BorderBrush="#FFFF6F00"/>

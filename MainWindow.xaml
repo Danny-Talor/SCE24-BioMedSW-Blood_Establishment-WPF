@@ -23,7 +23,7 @@
             <!-- Register donation button (example of a button with an image and text) -->
             <Button x:Name="RegisterDonationButton" Margin="5" Padding="10" Click="RegisterDonation_Click" Cursor="Hand">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="Assets/add_button.png" Width="30" Height="30"/>
+                    <Image Source="/Assets/add_button.png" Width="30" Height="30"/>
                     <TextBlock Text="Register" VerticalAlignment="Center" Margin="5"/>
                 </StackPanel>
             </Button>
@@ -34,7 +34,7 @@
 
             <!-- Export donation button (example of a button with just an image) -->
             <Button x:Name="ExportButton" Margin="5" Padding="0" Click="Export_Click" Width="50" Background="Transparent" BorderBrush="Transparent">
-                <Image Source="/microsoft_excel_logo.png" Width="34" Height="32" Cursor="Hand" Stretch="Fill"/>
+                <Image Source="/Assets/microsoft_excel_logo.png" Width="34" Height="32" Cursor="Hand" Stretch="Fill"/>
             </Button>
 
             <!-- User management button -->

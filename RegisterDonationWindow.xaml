@@ -11,7 +11,7 @@
         <!-- Identification Number -->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Identification number"/>
-            <Image ToolTip="Must be a valid Israeli ID number." Source="/letter_i_PNG67.png" Width="15" Height="15" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="5,0,0,0"/>
+            <Image ToolTip="Must be a valid Israeli ID number." Source="/Assets/letter_i_PNG67.png" Width="15" Height="15" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="5,0,0,0"/>
         </StackPanel>
         <TextBlock x:Name="IdNumberError" Foreground="Red" Visibility="Collapsed"/>
 
@@ -39,7 +39,7 @@
         <!-- Full Name -->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Full name"/>
-            <Image ToolTip="First name and last name, Middle name optional." Source="/letter_i_PNG67.png" Width="15" Height="15" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="5,0,0,0"/>
+            <Image ToolTip="First name and last name, Middle name optional." Source="/Assets/letter_i_PNG67.png" Width="15" Height="15" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="5,0,0,0"/>
         </StackPanel>
         <TextBlock x:Name="FullNameError" Foreground="Red" Visibility="Collapsed"/>
 
@@ -85,7 +85,7 @@
         <!-- Donation Date -->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Donation date"/>
-            <Image ToolTip="Must be in DD/MM/YYYY format." Source="/letter_i_PNG67.png" Width="15" Height="15" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="5,0,0,0"/>
+            <Image ToolTip="Must be in DD/MM/YYYY format." Source="/Assets/letter_i_PNG67.png" Width="15" Height="15" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="5,0,0,0"/>
         </StackPanel>
         <TextBlock x:Name="DateError" Foreground="Red" Visibility="Collapsed"/>
 

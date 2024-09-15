@@ -84,7 +84,7 @@
                 <RowDefinition Height="5*"/>
             </Grid.RowDefinitions>
 
-            <Image Grid.Row="0" Source="/green_arrow_left.png" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Image Grid.Row="0" Source="/Assets/green_arrow_left.png" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
         <!-- Stock Side -->
         <Border Grid.Row="1" Grid.Column="2" Background="LightYellow" BorderThickness="1" BorderBrush="Black" Margin="1,0,15,0">

@@ -7,25 +7,27 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>blood_icon_149283.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\blood_icon_149283.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="green_arrow_left.png" />
-    <None Remove="letter_i_PNG67.png" />
-    <None Remove="login_window_logo.png" />
-    <None Remove="microsoft_excel_logo.png" />
+    <None Remove="Assets\add_button.png" />
+    <None Remove="Assets\green_arrow_left.png" />
+    <None Remove="Assets\letter_i_PNG67.png" />
+    <None Remove="Assets\login_window_logo.png" />
+    <None Remove="Assets\microsoft_excel_logo.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="blood_icon_149283.ico" />
+    <Content Include="Assets\blood_icon_149283.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="green_arrow_left.png" />
-    <Resource Include="letter_i_PNG67.png" />
-    <Resource Include="login_window_logo.png" />
-    <Resource Include="microsoft_excel_logo.png" />
+    <Resource Include="Assets\add_button.png" />
+    <Resource Include="Assets\green_arrow_left.png" />
+    <Resource Include="Assets\letter_i_PNG67.png" />
+    <Resource Include="Assets\login_window_logo.png" />
+    <Resource Include="Assets\microsoft_excel_logo.png" />
   </ItemGroup>
 
   <ItemGroup>
