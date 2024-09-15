@@ -25,14 +25,19 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         private string CurrentUser = "N/A";
 
         // Constructor initializes components and collections
-        public MainWindow(ApplicationData appData, string username, string userRole)
+        public MainWindow(ApplicationData appData, string username, int userRole)
         {
             InitializeComponent();
             this.ApplicationData = appData;
-            Donations = new ObservableCollection<Donation>();
 
-            // Initialize BloodTotals with default values for each blood type
-            BloodTotals = new ObservableCollection<BloodTotal>
+            if (userRole != (int)Util.UserRole.ADMINISTRATOR)
+            {
+                PopulateTableButton.Visibility = Visibility.Collapsed;
+                UserManagementButton.Visibility = Visibility.Collapsed;
+            }
+
+            Donations = new ObservableCollection<Donation>();
+            BloodTotals = new ObservableCollection<BloodTotal> // Initialize BloodTotals with default values for each blood type
             {
                 new BloodTotal("A-", 0),
                 new BloodTotal("A+", 0),
@@ -428,13 +433,18 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             catch (ApplicationException ex)
             {
                 MessageBox.Show(ex.Message, "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                
+
                 // Delete new export log entry
                 ApplicationData.Logs.Exports.RemoveAt(ApplicationData.Logs.Exports.Count - 1);
 
                 // Save application data
                 ApplicationData.SaveApplicationData(ApplicationData);
             }
+        }
+
+        private void UserManagementButton_Click(object sender, RoutedEventArgs e)
+        {
+            return;
         }
     }
 }

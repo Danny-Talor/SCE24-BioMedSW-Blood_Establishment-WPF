@@ -24,6 +24,13 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             EXPORTDATA,
         }
 
+        public enum UserRole
+        {
+            RESEARCH_STUDENT,
+            STAFF_MEMBER,
+            ADMINISTRATOR
+        }
+
         // Define default application data file names
         public const string ApplicationDataFileName = "SCE24-BioMedSW-BECS-data.xml";
         public const string ExportDataFileName = "SCE24-BioMedSW-BECS-exported.xlsx";
@@ -330,6 +337,14 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             }
 
             return new PasswordVerificationResponse("", true);
+        }
+
+        public static string GetUserRoleString(int i)
+        {
+            if (i == (int)UserRole.RESEARCH_STUDENT) return "Research Student";
+            if (i == (int)UserRole.STAFF_MEMBER) return "Staff Member";
+            if (i == (int)UserRole.ADMINISTRATOR) return "Administrator";
+            return "none";
         }
     }
 }

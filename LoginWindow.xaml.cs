@@ -63,7 +63,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 }
   
                 // Create new administrator account and save
-                User newAdmin = new User(username, password, "Administrator");
+                User newAdmin = new User(username, password, (int)Util.UserRole.ADMINISTRATOR);
                 applicationData.DefaultAdminUsername = username;
                 applicationData.Users_.Add(newAdmin);
                 ApplicationData.SaveApplicationData(applicationData);
@@ -96,14 +96,14 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     return;
                 }
 
-                MessageBox.Show($"Welcome, {user.Username}! You are logged in as {user.Role}.");
+                MessageBox.Show($"Welcome, {user.Username}! You are logged in as {Util.GetUserRoleString(user.Role)}.");
                 // Close login window and open main window if user is not a research student
-                if (user.Role == "Administrator" || user.Role == "Staff")
+                if (user.Role == (int)Util.UserRole.ADMINISTRATOR || user.Role == (int)Util.UserRole.STAFF_MEMBER )
                 {
                     var mainWindow = new MainWindow(applicationData, user.Username, user.Role);
                     mainWindow.Show();
                 }
-                if (user.Role == "Research Student")
+                if (user.Role == (int)Util.UserRole.RESEARCH_STUDENT)
                 {
                     // open window for research students
                 }

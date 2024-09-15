@@ -114,14 +114,14 @@ public class User
 {
     public string Username { get; set; }
     public string Password { get; set; }
-    public string Role { get; set; }
+    public int Role { get; set; }
     public User()
     {
         this.Username = "none";
         this.Password = "none";
-        this.Role = "none";
+        this.Role = 0;
     }
-    public User(string username, string password, string role)
+    public User(string username, string password, int role)
     {
         this.Username = username;
         this.Password = password;
