@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCE24_BioMedSW_Blood_Establishment_WPF"
         mc:Ignorable="d"
-        Title="Login" Height="350" Width="370"
-        ResizeMode="NoResize">
+        Title="Login" Height="350" Width="300"
+        ResizeMode="NoResize" Background="#FFE0FFFB">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
@@ -21,8 +21,7 @@
 
 
 
-        <Image Grid.Row="0" Source="/logo.png" Stretch="Fill" Margin="0,0,200,0"/>
-        <TextBlock Grid.Row="0" Text="Zikit" FontSize="48" HorizontalAlignment="Left" Margin="160,0,0,0" VerticalAlignment="Center" FontFamily="Bodoni MT Black" FontWeight="Bold"/>
+        <Image Grid.Row="0" Source="/login_window_logo.png" Stretch="Fill"/>
         <TextBlock Grid.Row="1" Text="" Margin="0,0,0,0"/>
         <TextBlock Grid.Row="2" Text="Username:" Margin="0,0,0,5" FontWeight="Bold"/>
         <TextBox Grid.Row="3" Name="usernameTextBox"  Margin="0,0,0,10" BorderBrush="#FFFF6F00"/>
