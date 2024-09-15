@@ -18,14 +18,23 @@
         </Grid.RowDefinitions>
 
         <!-- Buttons section -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button x:Name="RegisterDonationButton" Content="Register" Margin="5" Padding="10" Click="RegisterDonation_Click" Cursor="Hand" />
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
+
+            <!-- Register donation button (example of a button with an image and text) -->
+            <Button x:Name="RegisterDonationButton" Margin="5" Padding="10" Click="RegisterDonation_Click" Cursor="Hand">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Assets/add_button.png" Width="30" Height="30"/>
+                    <TextBlock Text="Register" VerticalAlignment="Center" Margin="5"/>
+                </StackPanel>
+            </Button>
+            
             <Button x:Name="PopulateTableButton" Content="Populate" Margin="5" Padding="10" Click="PopulateTable_Click" Cursor="Hand" />
             <Button x:Name="SendDonationButton" Content="Send" Margin="5" Padding="10" Click="SendDonationButton_Click" Cursor="Hand" />
             <Button x:Name="MassCasualtyIncidentButton" Content="Mass Casualty Incident" Margin="5" Padding="10" Click="MassCasualtyIncidentButton_Click" Background="Red" Foreground="White" Cursor="Hand" />
-            <!-- Button with Image -->
-            <Button x:Name="ExportButton" Margin="5" Padding="0" Click="Export_Click">
-                <Image Source="/microsoft_excel_logo.png" Width="33" Height="32" Cursor="Hand" Stretch="Fill"/>
+
+            <!-- Export donation button (example of a button with just an image) -->
+            <Button x:Name="ExportButton" Margin="5" Padding="0" Click="Export_Click" Width="50" Background="Transparent" BorderBrush="Transparent">
+                <Image Source="/microsoft_excel_logo.png" Width="34" Height="32" Cursor="Hand" Stretch="Fill"/>
             </Button>
         </StackPanel>
 
