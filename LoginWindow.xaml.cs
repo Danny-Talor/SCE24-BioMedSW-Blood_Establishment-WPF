@@ -29,14 +29,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         {
             InitializeComponent();
             applicationData = ApplicationData.LoadApplicationData(); // Load application data from the XML file
-            while(true)
-            {
-                if(applicationData != null)
-                {
-                    InitializeAdminAccount();
-                    break;
-                }
-            }
+            InitializeAdminAccount();
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
@@ -106,6 +99,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 if (user.Role == (int)Util.UserRole.RESEARCH_STUDENT)
                 {
                     // open window for research students
+                    MessageBox.Show("Research Student Window WIP");
                 }
                 this.Close();
             }
