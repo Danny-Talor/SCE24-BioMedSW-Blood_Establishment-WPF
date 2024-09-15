@@ -5,11 +5,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SCE24_BioMedSW_Blood_Establishment_WPF
 {
@@ -25,6 +27,10 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         // Define default application data file names
         public const string ApplicationDataFileName = "SCE24-BioMedSW-BECS-data.xml";
         public const string ExportDataFileName = "SCE24-BioMedSW-BECS-exported.xlsx";
+
+        //Define magic numbers
+        public const uint MIN_PASS_LEN = 8;
+        public const uint MAX_PASS_LEN = 24;
 
         // Define a dictionary to map recipient blood types to compatible donor blood types
         static readonly Dictionary<string, string[]> donorBloodTypes = new Dictionary<string, string[]>
@@ -279,13 +285,51 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
 
         }
 
-
         public static string TimestampStringNormalize(string timestamp)
         {
             DateTime value;
             if (DateTime.TryParse(timestamp,out value)) return value.ToString("dd.MM.yyyy HH:mm:ss");
             else return "?";
 
+        }
+
+        public static bool ContainsSpecialCharacter(string input)
+        {
+            // Define a pattern that includes special characters
+            string pattern = @"[!@#$%^&*(),.?""{}|<>]";
+
+            // Check if input contains at least one special character
+            return Regex.IsMatch(input, pattern);
+        }
+
+        public class PasswordVerificationResponse
+        {
+            public string ResponseMessage;
+            public bool IsVerified;
+
+            public PasswordVerificationResponse(string responseMessage, bool  isVerified)
+            {
+                this.ResponseMessage = responseMessage;
+                this.IsVerified = isVerified;
+            }
+        }
+
+        public static PasswordVerificationResponse VerifyPassword(string password)
+        {
+
+            // Check password length
+            if (password.Length < MIN_PASS_LEN || password.Length > MAX_PASS_LEN)
+            {
+                return new PasswordVerificationResponse($"Password must be {MIN_PASS_LEN} to {MAX_PASS_LEN} characters long", false);
+            }
+
+            // Make sure password contains at least one special character
+            if (!ContainsSpecialCharacter(password))
+            {
+                return new PasswordVerificationResponse($"Password must contain at least 1 special character", false);
+            }
+
+            return new PasswordVerificationResponse("", true);
         }
     }
 }

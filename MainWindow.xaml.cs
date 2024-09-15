@@ -25,10 +25,10 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         private string CurrentUser = "N/A";
 
         // Constructor initializes components and collections
-        public MainWindow()
+        public MainWindow(ApplicationData appData, string username, string userRole)
         {
             InitializeComponent();
-            ApplicationData = ApplicationData.LoadApplicationData();
+            this.ApplicationData = appData;
             Donations = new ObservableCollection<Donation>();
 
             // Initialize BloodTotals with default values for each blood type

@@ -1,4 +1,6 @@
-﻿using SCE24_BioMedSW_Blood_Establishment_WPF;
+﻿using DocumentFormat.OpenXml.Office.Word;
+using DocumentFormat.OpenXml.Spreadsheet;
+using SCE24_BioMedSW_Blood_Establishment_WPF;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
@@ -7,12 +9,16 @@ using System.Xml.Serialization;
 [Serializable]
 public class ApplicationData
 {
+    public string DefaultAdminUsername { get; set; }
+    public List<User> Users_ { get; set; }
     public List<Donation> Donations { get; set; }
     public Logs Logs { get; set; }
 
     // Default constructor initializes the lists
     public ApplicationData()
     {
+        DefaultAdminUsername = "";
+        Users_ = new List<User>();
         Donations = new List<Donation>();
         Logs = new Logs();
     }
@@ -101,4 +107,24 @@ public class ExportLog
 { 
     public DateTime Timestamp { get; set; }
     public string User { get; set; }
+}
+
+[Serializable]
+public class User
+{
+    public string Username { get; set; }
+    public string Password { get; set; }
+    public string Role { get; set; }
+    public User()
+    {
+        this.Username = "none";
+        this.Password = "none";
+        this.Role = "none";
+    }
+    public User(string username, string password, string role)
+    {
+        this.Username = username;
+        this.Password = password;
+        this.Role = role;
+    }
 }
