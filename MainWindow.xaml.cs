@@ -36,6 +36,8 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 UserManagementButton.Visibility = Visibility.Collapsed;
             }
 
+            CurrentUser = username;
+
             Donations = new ObservableCollection<Donation>();
             BloodTotals = new ObservableCollection<BloodTotal> // Initialize BloodTotals with default values for each blood type
             {
