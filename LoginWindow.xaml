@@ -31,6 +31,6 @@
 
         <TextBlock Grid.Row="6" Name="errorMessageTextBlock" Foreground="Red" Margin="0,10,0,10" HorizontalAlignment="Center"/>
 
-        <Button Grid.Row="7" Content="Login" Width="100" HorizontalAlignment="Right" Click="LoginButton_Click"/>
+        <Button Grid.Row="7" Content="Login" Width="100" HorizontalAlignment="Right" Click="LoginButton_Click" IsDefault="True"/>
     </Grid>
 </Window>
