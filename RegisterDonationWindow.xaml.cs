@@ -126,32 +126,61 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             DateTime? selectedDate = DonationDatePicker.SelectedDate;
             if (selectedDate == null || selectedDate > DateTime.Today)
             {
-                DateError.Text = "Please select a valid date.";
+                DateError.Text = "Please select a valid date not in the future.";
                 DateError.Visibility = Visibility.Visible;
                 isValid = false;
             }
             else
             {
-                DateError.Visibility = Visibility.Collapsed;
-            }
-
-            // Check donation frequency (every 56 days, max 6 times per year)
-            var donor = Donations.FirstOrDefault(d => d.IdentificationNumber == idNumber);
-            if (donor != null)
-            {
-                var lastDonation = donor.DonationDates.OrderByDescending(d => d).FirstOrDefault();
-                if (lastDonation != default && (selectedDate.Value - lastDonation).TotalDays < 56)
+                // Check donation frequency (every 56 days, max 6 times per year)
+                var donor = Donations.FirstOrDefault(d => d.IdentificationNumber == idNumber);
+                if (donor != null)
                 {
-                    DateError.Text = "Donor has already donated in the past 56 days.";
-                    DateError.Visibility = Visibility.Visible;
-                    isValid = false;
+                    var donationsOrderedByDate = donor.DonationDates.OrderBy(d => d).ToList();
+                    int index = donationsOrderedByDate.BinarySearch(selectedDate.Value);
+                    if (index < 0) index = ~index; // If the date is not found, BinarySearch returns the bitwise complement of the next index
+
+                    // Check the date before the selected date (if exists)
+                    if (index > 0)
+                    {
+                        var previousDonation = donationsOrderedByDate[index - 1];
+                        if ((selectedDate.Value - previousDonation).TotalDays < 56)
+                        {
+                            DateError.Text = $"This donation is too close to the previous one on {previousDonation:d}. \nMust be at least 56 days apart.";
+                            DateError.Visibility = Visibility.Visible;
+                            isValid = false;
+                        }
+                    }
+
+                    // Check the date after the selected date (if exists)
+                    if (index < donationsOrderedByDate.Count)
+                    {
+                        var nextDonation = donationsOrderedByDate[index];
+                        if ((nextDonation - selectedDate.Value).TotalDays < 56)
+                        {
+                            DateError.Text = $"This donation is too close to the next one on {nextDonation:d}. \nMust be at least 56 days apart.";
+                            DateError.Visibility = Visibility.Visible;
+                            isValid = false;
+                        }
+                    }
+
+                    // Check if donor has donated 6 times in the selected year
+                    var donationsInSelectedYear = donor.DonationDates.Count(d => d.Year == selectedDate.Value.Year);
+                    if (donationsInSelectedYear >= 6 && !donor.DonationDates.Any(d => d == selectedDate.Value))
+                    {
+                        DateError.Text = $"Donor has already donated 6 times in {selectedDate.Value.Year}.";
+                        DateError.Visibility = Visibility.Visible;
+                        isValid = false;
+                    }
+
+                    if (isValid)
+                    {
+                        DateError.Visibility = Visibility.Collapsed;
+                    }
                 }
-
-                if (donor.DonationDates.Count(d => d.Year == selectedDate.Value.Year) >= 6)
+                else
                 {
-                    DateError.Text = "Donor has already donated 6 times this year.";
-                    DateError.Visibility = Visibility.Visible;
-                    isValid = false;
+                    DateError.Visibility = Visibility.Collapsed;
                 }
             }
 
@@ -183,13 +212,15 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
 
                 if (existingDonation != null)
                 {
-                    // If exists, populate full name and blood type fields
+                    // If exists, populate full name, blood type, and birth date fields
                     FullNameTextBox.Text = existingDonation.FullName;
                     BloodTypeComboBox.SelectedItem = BloodTypeComboBox.Items.Cast<ComboBoxItem>().FirstOrDefault(item => item.Content.ToString() == existingDonation.BloodType);
+                    BirthDatePicker.SelectedDate = existingDonation.BirthDate;
 
                     // Disable full name and blood type fields
                     FullNameTextBox.IsEnabled = false;
                     BloodTypeComboBox.IsEnabled = false;
+                    BirthDatePicker.IsEnabled = false;
                 }
                 else
                 {
@@ -197,10 +228,12 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     FullNameTextBox.Text = string.Empty;
                     BloodTypeComboBox.SelectedItem = null;
                     DonationDatePicker.SelectedDate = null;
+                    BirthDatePicker.SelectedDate = null;
 
                     FullNameTextBox.IsEnabled = true;
                     BloodTypeComboBox.IsEnabled = true;
                     DonationDatePicker.IsEnabled = true;
+                    BirthDatePicker.IsEnabled = true;
                 }
             }
         }
