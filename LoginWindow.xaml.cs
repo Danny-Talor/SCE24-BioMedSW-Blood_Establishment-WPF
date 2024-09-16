@@ -87,6 +87,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 var user = applicationData.Users_.FirstOrDefault(u => u.Username == username);
                 user.Password = password; 
                 user.IsPasswordChangeRequired = false;
+                ApplicationData.SaveApplicationData(applicationData);
                 isNewPassword = false;
 
                 // Notify user
