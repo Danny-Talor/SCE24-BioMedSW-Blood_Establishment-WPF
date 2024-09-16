@@ -353,15 +353,23 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         public static DateTime GenerateRandomBirthdate()
         {
             Random random = new Random();
-            // Calculate the minimum date (18 years ago from today)
+
+            // Define the age range
+            int minAge = 17;
+            int maxAge = 65;
+
+            // Get the current date
             DateTime today = DateTime.Today;
-            DateTime minDate = today.AddYears(-18);
 
-            // Generate a random date between minDate and today
-            int range = (today - minDate).Days;
-            DateTime randomDate = minDate.AddDays(random.Next(range));
+            // Calculate the earliest and latest birth year
+            DateTime latestBirthdate = today.AddYears(-minAge); // Latest birthdate for 17 years old
+            DateTime earliestBirthdate = today.AddYears(-maxAge); // Earliest birthdate for 65 years old
 
-            return randomDate;
+            // Generate a random number of days between the earliest and latest birthdates
+            int daysRange = (latestBirthdate - earliestBirthdate).Days;
+            DateTime randomBirthdate = earliestBirthdate.AddDays(random.Next(daysRange));
+
+            return randomBirthdate;
         }
 
         public static int GetAge(DateTime birthDate)
