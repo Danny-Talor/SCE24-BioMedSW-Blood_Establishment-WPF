@@ -103,11 +103,14 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
 
         private string GetAgeGroup(int age)
         {
-            if (age < 18) return "Under 18";
-            if (age < 30) return "18-29";
-            if (age < 45) return "30-44";
-            if (age < 60) return "45-59";
-            return "60+";
+            if (age < 23) return "17-22";
+            if (age < 29) return "23-28";
+            if (age < 35) return "29-34";
+            if (age < 41) return "35-40";
+            if (age < 47) return "41-46";
+            if (age < 63) return "47-62";
+            if (age < 66) return "63-65";
+            return "65+";
         }
 
         public Dictionary<string, int> GetDonationFrequency()
