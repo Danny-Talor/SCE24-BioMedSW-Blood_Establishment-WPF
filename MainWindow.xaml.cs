@@ -446,7 +446,8 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
 
         private void UserManagementButton_Click(object sender, RoutedEventArgs e)
         {
-            return;
+            var manageUsersWindow = new ManageUsersWindow(ApplicationData);
+            manageUsersWindow.ShowDialog();
         }
     }
 }
