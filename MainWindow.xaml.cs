@@ -75,7 +75,6 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             registerWindow.ShowDialog();
         }
 
-        // Event handler for populating the table with random data
         private void PopulateTable_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Click Yes to populate one of each blood type, Click No to populate randomly",
@@ -83,7 +82,6 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                                                      MessageBoxButton.YesNoCancel,
                                                      MessageBoxImage.Warning);
             Random random = new Random();
-            int donationCount = 0;
             string[] bloodTypes = { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" };
             string[] fullNames = { "John Doe", "Jane Smith", "Michael Johnson", "Emily Brown", "Robert Williams" };
 
@@ -94,8 +92,16 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 {
                     string identificationNumber = Util.GetRandomIsraeliIDNumber();
                     string fullName = fullNames[random.Next(0, fullNames.Length)];
-                    DateTime date = DateTime.Now.AddDays(-random.Next(1, 100)); // Random date within the last 100 days
                     DateTime birthdate = Util.GenerateRandomBirthdate();
+
+                    // Validate birthdate (age check: at least 17 years old)
+                    if (birthdate > DateTime.Today.AddYears(-17))
+                    {
+                        continue; // Skip this donor if they are under 17
+                    }
+
+                    DateTime date = DateTime.Now.AddDays(-random.Next(1, 100)); // Random date within the last 100 days
+
                     Donation newDonation = new Donation(fullName, identificationNumber, birthdate, bloodType, 1, new List<DateTime> { date });
                     Donations.Add(newDonation);
                     // Add new donation to application data
@@ -122,16 +128,39 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     string fullName = fullNames[random.Next(0, fullNames.Length)];
                     string bloodType = bloodTypes[random.Next(0, bloodTypes.Length)];
                     DateTime birthdate = Util.GenerateRandomBirthdate();
+
+                    // Validate birthdate (age check: at least 17 years old)
+                    if (birthdate > DateTime.Today.AddYears(-17))
+                    {
+                        continue; // Skip this donor if they are under 17
+                    }
+
                     List<DateTime> donationDates = new List<DateTime>();
                     int numDates = random.Next(1, 5); // Randomly choose 1 to 4 dates
                     for (int j = 0; j < numDates; j++)
                     {
                         DateTime date = DateTime.Now.AddDays(-random.Next(1, 100)); // Random date within the last 100 days
+
+                        // Validate donation frequency (every 56 days, max 6 times per year)
+                        var donor = Donations.FirstOrDefault(d => d.IdentificationNumber == identificationNumber);
+                        if (donor != null)
+                        {
+                            var lastDonation = donor.DonationDates.OrderByDescending(d => d).FirstOrDefault();
+                            if (lastDonation != default && (DateTime.Today - lastDonation).TotalDays < 56)
+                            {
+                                continue; // Skip if the donor has donated within the last 56 days
+                            }
+
+                            if (donor.DonationDates.Count(d => d.Year == DateTime.Today.Year) >= 6)
+                            {
+                                continue; // Skip if the donor has donated more than 6 times this year
+                            }
+                        }
+
                         donationDates.Add(date);
-                        donationCount++;
                     }
 
-                    Donation newDonation = new Donation(fullName, identificationNumber, birthdate, bloodType, donationCount, donationDates);
+                    Donation newDonation = new Donation(fullName, identificationNumber, birthdate, bloodType, donationDates.Count, donationDates);
                     Donations.Add(newDonation);
                     // Add new donation to application data
                     ApplicationData.Donations.Add(newDonation);
@@ -149,9 +178,6 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                         };
                         ApplicationData.Logs.Donations.Add(donationLog);
                     }
-
-                    // Reset donationCount for next iteration
-                    donationCount = 0;
                 }
             }
             else
