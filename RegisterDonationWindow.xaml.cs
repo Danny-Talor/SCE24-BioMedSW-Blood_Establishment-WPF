@@ -53,7 +53,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             }
         }
 
-        // Method to validate input fields
+        //Validate user inputs
         private bool ValidateInputs()
         {
             bool isValid = true;
@@ -84,17 +84,30 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 IdNumberError.Visibility = Visibility.Collapsed;
             }
 
-            // Validate Birth Date
+            // Validate Birth Date (Age Check: at least 17 years old)
             DateTime? selectedBirthDate = BirthDatePicker.SelectedDate;
-            if (selectedBirthDate == null || selectedBirthDate > DateTime.Today)
+            if (selectedBirthDate == null || selectedBirthDate > DateTime.Today.AddYears(-17))
             {
-                BirthDateError.Text = "Please select a valid date.";
+                BirthDateError.Text = "Donor must be at least 17 years old.";
                 BirthDateError.Visibility = Visibility.Visible;
                 isValid = false;
             }
             else
             {
                 BirthDateError.Visibility = Visibility.Collapsed;
+            }
+
+            // Validate Weight (minimum 50 kg)
+            double weight = WeightTextBox.Text != string.Empty ? double.Parse(WeightTextBox.Text) : 0;
+            if (weight < 50)
+            {
+                WeightError.Text = "Donor must weigh at least 50 kg.";
+                WeightError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                WeightError.Visibility = Visibility.Collapsed;
             }
 
             // Validate Blood Type
@@ -122,8 +135,41 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 DateError.Visibility = Visibility.Collapsed;
             }
 
+            // Check donation frequency (every 56 days, max 6 times per year)
+            var donor = Donations.FirstOrDefault(d => d.IdentificationNumber == idNumber);
+            if (donor != null)
+            {
+                var lastDonation = donor.DonationDates.OrderByDescending(d => d).FirstOrDefault();
+                if (lastDonation != default && (selectedDate.Value - lastDonation).TotalDays < 56)
+                {
+                    DateError.Text = "Donor has already donated in the past 56 days.";
+                    DateError.Visibility = Visibility.Visible;
+                    isValid = false;
+                }
+
+                if (donor.DonationDates.Count(d => d.Year == selectedDate.Value.Year) >= 6)
+                {
+                    DateError.Text = "Donor has already donated 6 times this year.";
+                    DateError.Visibility = Visibility.Visible;
+                    isValid = false;
+                }
+            }
+
+            // Validate Feeling Healthy Checkbox
+            if (!FeelingHealthyCheckBox.IsChecked ?? false)
+            {
+                FeelingHealthyError.Text = "Please confirm that the donor is feeling healthy.";
+                FeelingHealthyError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                FeelingHealthyError.Visibility = Visibility.Collapsed;
+            }
+
             return isValid;
         }
+
 
         // Event handler for Identification Number text box text changed
         private void IdentificationNumberTextBox_TextChanged(object sender, TextChangedEventArgs e)

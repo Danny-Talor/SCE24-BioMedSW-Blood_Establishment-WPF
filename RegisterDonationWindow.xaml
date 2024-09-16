@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCE24_BioMedSW_Blood_Establishment_WPF"
         mc:Ignorable="d"
-        Title="Register Donation" Height="400" Width="300">
+        Title="Register Donation" Height="500" Width="300">
     <StackPanel Margin="20">
         <!-- Identification Number -->
         <StackPanel Orientation="Horizontal">
@@ -102,6 +102,14 @@
             <ComboBoxItem>O-</ComboBoxItem>
         </ComboBox>
 
+        <!-- Weight -->
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Weight (kg)"/>
+            <Image ToolTip="Must be at least 50 kg." Source="/Assets/letter_i_PNG67.png" Width="15" Height="15" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="5,0,0,0"/>
+        </StackPanel>
+        <TextBlock x:Name="WeightError" Foreground="Red" Visibility="Collapsed"/>
+        <TextBox x:Name="WeightTextBox" Margin="0,0,0,10"/>
+        
         <!-- Donation Date -->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Donation date"/>
@@ -121,8 +129,15 @@
                 </Style>
             </DatePicker.Style>
         </DatePicker>
-
+        
+        <!-- Feeling Healthy Checkbox -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+            <CheckBox x:Name="FeelingHealthyCheckBox" />
+            <TextBlock Text="Feeling healthy" Margin="5,0,0,0"/>
+        </StackPanel>
+        <TextBlock x:Name="FeelingHealthyError" Foreground="Red" Visibility="Collapsed" />
+        
         <!-- Submit button -->
-        <Button Content="Submit" Click="SubmitButton_Click" HorizontalAlignment="Center" Padding="10" Width="100"/>
+        <Button Content="Submit" Click="SubmitButton_Click" HorizontalAlignment="Center" Margin ="10,20,10,10" Padding="10" Width="100"/>
     </StackPanel>
 </Window>
