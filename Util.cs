@@ -26,6 +26,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
 
         public enum UserRole
         {
+            NONE = -1,
             RESEARCH_STUDENT,
             STAFF_MEMBER,
             ADMINISTRATOR
@@ -38,6 +39,9 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         //Define magic numbers
         public const uint MIN_PASS_LEN = 8;
         public const uint MAX_PASS_LEN = 24;
+
+        //Default password for users
+        public const string DefaultPassword = "Aa123456";
 
         // Define a dictionary to map recipient blood types to compatible donor blood types
         static readonly Dictionary<string, string[]> donorBloodTypes = new Dictionary<string, string[]>
@@ -339,12 +343,19 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             return new PasswordVerificationResponse("", true);
         }
 
-        public static string GetUserRoleString(int i)
+        public static string GetUserRole(int i)
         {
             if (i == (int)UserRole.RESEARCH_STUDENT) return "Research Student";
             if (i == (int)UserRole.STAFF_MEMBER) return "Staff Member";
             if (i == (int)UserRole.ADMINISTRATOR) return "Administrator";
-            return "none";
+            return "None";
+        }
+        public static int GetUserRole(string role)
+        {
+            if (role == "Research Student") return (int)UserRole.RESEARCH_STUDENT;
+            if (role == "Staff Member") return (int)UserRole.STAFF_MEMBER;
+            if (role == "Administrator") return (int)UserRole.ADMINISTRATOR;
+            return -1;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
     public partial class LoginWindow : Window
     {
         bool isFirstStartup = false;
+        bool isNewPassword = false;
 
         // Application Data
         public ApplicationData applicationData { get; set; }
@@ -58,6 +59,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 // Create new administrator account and save
                 User newAdmin = new User(username, password, (int)Util.UserRole.ADMINISTRATOR);
                 applicationData.DefaultAdminUsername = username;
+                newAdmin.IsPasswordChangeRequired = false;
                 applicationData.Users_.Add(newAdmin);
                 ApplicationData.SaveApplicationData(applicationData);
 
@@ -69,6 +71,29 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
 
                 // Switch to log in mode
                 isFirstStartup = false;
+            }
+            else if(isNewPassword)
+            {
+                // Verify new password
+                Util.PasswordVerificationResponse response = Util.VerifyPassword(password);
+                if (!response.IsVerified)
+                {
+                    errorMessageTextBlock.Text = response.ResponseMessage;
+                    passwordBox.Clear();
+                    return;
+                }
+
+                // Set user's new password and change the flags
+                var user = applicationData.Users_.FirstOrDefault(u => u.Username == username);
+                user.Password = password; 
+                user.IsPasswordChangeRequired = false;
+                isNewPassword = false;
+
+                // Notify user
+                errorMessageTextBlock.Text = "";
+                usernameTextBox.Clear();
+                passwordBox.Clear();
+                MessageBox.Show("Password changed! Please log in");
             }
             else
             {
@@ -89,7 +114,15 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     return;
                 }
 
-                MessageBox.Show($"Welcome, {user.Username}! You are logged in as {Util.GetUserRoleString(user.Role)}.");
+                if(user.IsPasswordChangeRequired == true)
+                {
+                    errorMessageTextBlock.Text = "PASSWORD CHANGE REQUIRED, TYPE IN NEW PASSWORD";
+                    passwordBox.Clear();
+                    isNewPassword = true;
+                    return;
+                }
+
+                MessageBox.Show($"Welcome, {user.Username}! You are logged in as {Util.GetUserRole(user.Role)}.");
                 // Close login window and open main window if user is not a research student
                 if (user.Role == (int)Util.UserRole.ADMINISTRATOR || user.Role == (int)Util.UserRole.STAFF_MEMBER )
                 {

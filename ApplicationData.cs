@@ -115,16 +115,19 @@ public class User
     public string Username { get; set; }
     public string Password { get; set; }
     public int Role { get; set; }
+    public bool IsPasswordChangeRequired { get; set; }
     public User()
     {
         this.Username = "none";
         this.Password = "none";
         this.Role = 0;
+        this.IsPasswordChangeRequired = true;
     }
     public User(string username, string password, int role)
     {
         this.Username = username;
         this.Password = password;
         this.Role = role;
+        this.IsPasswordChangeRequired = true;
     }
 }
