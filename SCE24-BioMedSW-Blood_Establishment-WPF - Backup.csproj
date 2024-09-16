@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>SCE24_BioMedSW_Blood_Establishment_WPF</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\blood_icon_149283.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\add_button.png" />
+    <None Remove="Assets\green_arrow_left.png" />
+    <None Remove="Assets\letter_i_PNG67.png" />
+    <None Remove="Assets\login_window_logo.png" />
+    <None Remove="Assets\microsoft_excel_logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\blood_icon_149283.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\add_button.png" />
+    <Resource Include="Assets\green_arrow_left.png" />
+    <Resource Include="Assets\letter_i_PNG67.png" />
+    <Resource Include="Assets\login_window_logo.png" />
+    <Resource Include="Assets\microsoft_excel_logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="bin\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.3" />
+  </ItemGroup>
+
+</Project>

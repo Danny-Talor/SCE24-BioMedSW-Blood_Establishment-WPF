@@ -130,10 +130,11 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     var mainWindow = new MainWindow(applicationData, user.Username, user.Role);
                     mainWindow.Show();
                 }
+                // open window for research students
                 if (user.Role == (int)Util.UserRole.RESEARCH_STUDENT)
                 {
-                    // open window for research students
-                    MessageBox.Show("Research Student Window WIP");
+                    var statisticsWindow = new StatisticsWindow();
+                    statisticsWindow.Show();
                 }
                 this.Close();
             }
