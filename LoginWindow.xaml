@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCE24_BioMedSW_Blood_Establishment_WPF"
         mc:Ignorable="d"
-        Title="Login" Height="350" Width="300"
+        Title="Login" Height="380" Width="370"
         ResizeMode="NoResize" Background="#FFE0FFFB">
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="120"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
