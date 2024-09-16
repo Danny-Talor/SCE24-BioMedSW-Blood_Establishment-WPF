@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Xml.Linq;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SCE24_BioMedSW_Blood_Establishment_WPF
 {
@@ -44,30 +36,28 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         public const string DefaultPassword = "Aa123456";
 
         // Define a dictionary to map recipient blood types to compatible donor blood types
-        static readonly Dictionary<string, string[]> donorBloodTypes = new Dictionary<string, string[]>
-    {
-        {"O-", new[] {"O-"}},
-        {"O+", new[] {"O-", "O+"}},
-        {"A-", new[] {"O-", "A-"}},
-        {"A+", new[] {"O-", "O+", "A-", "A+"}},
-        {"B-", new[] {"O-", "B-"}},
-        {"B+", new[] {"O-", "O+", "B-", "B+"}},
-        {"AB-", new[] {"O-", "A-", "B-", "AB-"}},
-        {"AB+", new[] {"O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"}}
-    };
+        static readonly Dictionary<string, string[]> donorBloodTypes = new Dictionary<string, string[]>{
+            {"O-", new[] {"O-"}},
+            {"O+", new[] {"O-", "O+"}},
+            {"A-", new[] {"O-", "A-"}},
+            {"A+", new[] {"O-", "O+", "A-", "A+"}},
+            {"B-", new[] {"O-", "B-"}},
+            {"B+", new[] {"O-", "O+", "B-", "B+"}},
+            {"AB-", new[] {"O-", "A-", "B-", "AB-"}},
+            {"AB+", new[] {"O-", "O+", "A-", "A+", "B-", "B+", "AB-", "AB+"}}
+        };
 
         // Blood type rarity percentages (higher percentage means more common)
-        static readonly Dictionary<string, double> bloodTypeRarity = new Dictionary<string, double>
-    {
-        {"A+", 0.34},
-        {"O+", 0.32},
-        {"B+", 0.17},
-        {"AB+", 0.07},
-        {"A-", 0.04},
-        {"O-", 0.03},
-        {"B-", 0.02},
-        {"AB-", 0.01},
-    };
+        static readonly Dictionary<string, double> bloodTypeRarity = new Dictionary<string, double>{
+            {"A+", 0.34},
+            {"O+", 0.32},
+            {"B+", 0.17},
+            {"AB+", 0.07},
+            {"A-", 0.04},
+            {"O-", 0.03},
+            {"B-", 0.02},
+            {"AB-", 0.01},
+        };
 
         public static string GetCompatibleBloodTypes(string requestedBloodType)
         {
@@ -350,6 +340,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             if (i == (int)UserRole.ADMINISTRATOR) return "Administrator";
             return "None";
         }
+
         public static int GetUserRole(string role)
         {
             if (role == "Research Student") return (int)UserRole.RESEARCH_STUDENT;
