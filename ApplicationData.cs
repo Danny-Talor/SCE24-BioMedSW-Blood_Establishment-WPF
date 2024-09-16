@@ -75,6 +75,7 @@ public class DonationLog
 {
     public string FullName { get; set; }
     public string IdentificationNumber { get; set; }
+    public DateTime BirthDate { get; set; }
     public string BloodType { get; set; }
     public DateTime DonationDate { get; set; }
     public string RegisteredBy { get; set; }
@@ -88,7 +89,7 @@ public class BloodTransferLog
     public string BloodType { get; set; }
     public string RequestedBloodType { get; set; }
     public int RequestedAmount { get; set; }
-    public int TransferredAmount { get; set; } // New property
+    public int TransferredAmount { get; set; }
     public string RequestedDepartment { get; set; }
     public DateTime Timestamp { get; set; }
     public string User { get; set; }

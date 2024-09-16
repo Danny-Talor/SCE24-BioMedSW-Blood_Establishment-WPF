@@ -23,6 +23,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         // Strings
         private const string SearchBarPlaceholderText = "Search...";
         private string CurrentUser = "N/A";
+        private int currentUserRole = -1;
 
         // Constructor initializes components and collections
         public MainWindow(ApplicationData appData, string username, int userRole)
@@ -30,13 +31,17 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             InitializeComponent();
             this.ApplicationData = appData;
 
-            if (userRole != (int)Util.UserRole.ADMINISTRATOR)
+            CurrentUser = username;
+            currentUserRole = userRole;
+
+            // Hide buttons if not admin
+            if (currentUserRole != (int)Util.UserRole.ADMINISTRATOR)
             {
                 PopulateTableButton.Visibility = Visibility.Collapsed;
                 UserManagementButton.Visibility = Visibility.Collapsed;
+                ExportButton.Visibility = Visibility.Collapsed;
             }
 
-            CurrentUser = username;
 
             Donations = new ObservableCollection<Donation>();
             BloodTotals = new ObservableCollection<BloodTotal> // Initialize BloodTotals with default values for each blood type
@@ -65,7 +70,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         // Event handler for registering a new donation
         private void RegisterDonation_Click(object sender, RoutedEventArgs e)
         {
-            var registerWindow = new RegisterDonationWindow(Donations);
+            var registerWindow = new RegisterDonationWindow(Donations, currentUserRole);
             registerWindow.DonationSubmitted += RegisterWindow_DonationSubmitted;
             registerWindow.ShowDialog();
         }
@@ -90,7 +95,8 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     string identificationNumber = Util.GetRandomIsraeliIDNumber();
                     string fullName = fullNames[random.Next(0, fullNames.Length)];
                     DateTime date = DateTime.Now.AddDays(-random.Next(1, 100)); // Random date within the last 100 days
-                    Donation newDonation = new Donation(fullName, identificationNumber, bloodType, 1, new List<DateTime> { date });
+                    DateTime birthdate = Util.GenerateRandomBirthdate();
+                    Donation newDonation = new Donation(fullName, identificationNumber, birthdate, bloodType, 1, new List<DateTime> { date });
                     Donations.Add(newDonation);
                     // Add new donation to application data
                     ApplicationData.Donations.Add(newDonation);
@@ -99,6 +105,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     {
                         FullName = newDonation.FullName,
                         IdentificationNumber = newDonation.IdentificationNumber,
+                        BirthDate = newDonation.BirthDate,
                         BloodType = newDonation.BloodType,
                         DonationDate = newDonation.DonationDates.Last(),
                         RegisteredBy = CurrentUser
@@ -114,7 +121,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     string identificationNumber = Util.GetRandomIsraeliIDNumber();
                     string fullName = fullNames[random.Next(0, fullNames.Length)];
                     string bloodType = bloodTypes[random.Next(0, bloodTypes.Length)];
-
+                    DateTime birthdate = Util.GenerateRandomBirthdate();
                     List<DateTime> donationDates = new List<DateTime>();
                     int numDates = random.Next(1, 5); // Randomly choose 1 to 4 dates
                     for (int j = 0; j < numDates; j++)
@@ -124,7 +131,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                         donationCount++;
                     }
 
-                    Donation newDonation = new Donation(fullName, identificationNumber, bloodType, donationCount, donationDates);
+                    Donation newDonation = new Donation(fullName, identificationNumber, birthdate, bloodType, donationCount, donationDates);
                     Donations.Add(newDonation);
                     // Add new donation to application data
                     ApplicationData.Donations.Add(newDonation);

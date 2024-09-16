@@ -66,6 +66,7 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Identification Number" Binding="{Binding IdentificationNumber}" />
                     <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" />
+                    <DataGridTextColumn Header="Birth Date" Binding="{Binding BirthDate, StringFormat=\{0:yyyy-MM-dd\}}" />
                     <DataGridTextColumn Header="Blood Type" Binding="{Binding BloodType}" />
                     <DataGridTemplateColumn Header="Amount">
                         <DataGridTemplateColumn.CellTemplate>

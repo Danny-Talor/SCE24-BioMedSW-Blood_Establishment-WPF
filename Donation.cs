@@ -12,6 +12,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         // Properties of a donation
         public string FullName { get; set; }
         public string IdentificationNumber { get; set; }
+        public DateTime BirthDate { get; set; }
         public string BloodType { get; set; }
         public int DonationCount { get; set; }
         public List<DateTime> DonationDates { get; set; }
@@ -21,16 +22,18 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         {
             FullName = string.Empty;
             IdentificationNumber = string.Empty;
+            BirthDate = DateTime.MinValue;
             BloodType = string.Empty;
             DonationCount = 1; // Default donation count is 1
             DonationDates = new List<DateTime>(); // Initialize list of donation dates
         }
 
         // Parameterized constructor to set properties
-        public Donation(string FullName, string IdentificationNumber, string BloodType, int Amount, List<DateTime> DonationDates)
+        public Donation(string FullName, string IdentificationNumber, DateTime BirthDate, string BloodType, int Amount, List<DateTime> DonationDates)
         {
             this.FullName = FullName;
             this.IdentificationNumber = IdentificationNumber;
+            this.BirthDate = BirthDate;
             this.BloodType = BloodType;
             this.DonationCount = Amount;
             this.DonationDates = DonationDates;

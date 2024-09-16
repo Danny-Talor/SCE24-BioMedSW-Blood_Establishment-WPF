@@ -31,7 +31,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             // Populate statistics
             PopulateDonationTrends();
             PopulateBloodTypeDistribution();
-            //PopulateDonationByAgeGroup();
+            PopulateDonationByAgeGroup();
             PopulateBloodTypeUsage();
 
 
@@ -64,11 +64,11 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             BloodTypeDistributionDataGrid.ItemsSource = distribution.SelectMany(d => d.Value.Select(b => new { Date = d.Key.ToString("MMM yyyy"), BloodType = b.Key, Count = b.Value }));
         }
 
-        //private void PopulateDonationByAgeGroup()
-        //{
-        //    var ageGroupStats = GetDonationStatisticsByAgeGroup();
-        //    DonationByAgeGroupDataGrid.ItemsSource = ageGroupStats.Select(a => new { AgeGroup = a.Key, TotalDonations = a.Value });
-        //}
+        private void PopulateDonationByAgeGroup()
+        {
+            var ageGroupStats = GetDonationStatisticsByAgeGroup();
+            DonationByAgeGroupDataGrid.ItemsSource = ageGroupStats.Select(a => new { AgeGroup = a.Key, TotalDonations = a.Value });
+        }
 
         private void PopulateBloodTypeUsage()
         {
@@ -94,21 +94,21 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                     g => g.GroupBy(bg => bg.BloodType).ToDictionary(bg => bg.Key, bg => bg.Count()));
         }
 
-        //public Dictionary<string, int> GetDonationStatisticsByAgeGroup()
-        //{
-        //    return Donations
-        //        .GroupBy(d => GetAgeGroup(d.Age))
-        //        .ToDictionary(g => g.Key, g => g.Sum(d => d.DonationCount));
-        //}
+        public Dictionary<string, int> GetDonationStatisticsByAgeGroup()
+        {
+            return Donations
+                .GroupBy(d => GetAgeGroup(Util.GetAge(d.BirthDate)))
+                .ToDictionary(g => g.Key, g => g.Sum(d => d.DonationCount));
+        }
 
-        //private string GetAgeGroup(int age)
-        //{
-        //    if (age < 18) return "Under 18";
-        //    if (age < 30) return "18-29";
-        //    if (age < 45) return "30-44";
-        //    if (age < 60) return "45-59";
-        //    return "60+";
-        //}
+        private string GetAgeGroup(int age)
+        {
+            if (age < 18) return "Under 18";
+            if (age < 30) return "18-29";
+            if (age < 45) return "30-44";
+            if (age < 60) return "45-59";
+            return "60+";
+        }
 
         public Dictionary<string, int> GetDonationFrequency()
         {

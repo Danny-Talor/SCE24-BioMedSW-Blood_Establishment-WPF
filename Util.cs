@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -212,9 +213,10 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                         {
                             donationsSheet.Cell(row, 1).Value = log.Element("FullName")?.Value;
                             donationsSheet.Cell(row, 2).Value = log.Element("IdentificationNumber")?.Value;
-                            donationsSheet.Cell(row, 3).Value = log.Element("BloodType")?.Value;
-                            donationsSheet.Cell(row, 4).Value = TimestampStringNormalize(log.Element("DonationDate")?.Value);
-                            donationsSheet.Cell(row, 5).Value = log.Element("RegisteredBy")?.Value;
+                            donationsSheet.Cell(row, 3).Value = log.Element("BirthDate")?.Value;
+                            donationsSheet.Cell(row, 4).Value = log.Element("BloodType")?.Value;
+                            donationsSheet.Cell(row, 5).Value = TimestampStringNormalize(log.Element("DonationDate")?.Value);
+                            donationsSheet.Cell(row, 6).Value = log.Element("RegisteredBy")?.Value;
                             row++;
                         }
                     }
@@ -347,6 +349,36 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             if (role == "Staff Member") return (int)UserRole.STAFF_MEMBER;
             if (role == "Administrator") return (int)UserRole.ADMINISTRATOR;
             return -1;
+        }
+        public static DateTime GenerateRandomBirthdate()
+        {
+            Random random = new Random();
+            // Calculate the minimum date (18 years ago from today)
+            DateTime today = DateTime.Today;
+            DateTime minDate = today.AddYears(-18);
+
+            // Generate a random date between minDate and today
+            int range = (today - minDate).Days;
+            DateTime randomDate = minDate.AddDays(random.Next(range));
+
+            return randomDate;
+        }
+
+        public static int GetAge(DateTime birthDate)
+        {
+            // Get the current date
+            DateTime today = DateTime.Today;
+
+            // Calculate the difference in years
+            int age = today.Year - birthDate.Year;
+
+            // If the birthday has not occurred yet this year, subtract one from the age
+            if (birthDate > today.AddYears(-age))
+            {
+                age--;
+            }
+
+            return age;
         }
     }
 }

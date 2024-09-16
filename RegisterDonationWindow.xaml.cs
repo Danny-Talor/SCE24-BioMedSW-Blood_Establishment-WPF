@@ -20,11 +20,17 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         private ObservableCollection<Donation> Donations { get; set; }
 
         // Constructor
-        public RegisterDonationWindow(ObservableCollection<Donation> donations)
+        public RegisterDonationWindow(ObservableCollection<Donation> donations, int userRole)
         {
             InitializeComponent();
             Donations = donations;
             IdentificationNumberTextBox.TextChanged += IdentificationNumberTextBox_TextChanged;
+
+            // Hide generate button
+            if(userRole != (int)Util.UserRole.ADMINISTRATOR)
+            {
+                GenerateIDNumberButton.Visibility = Visibility.Collapsed;
+            }
         }
 
         // Event handler for Submit button click
@@ -36,6 +42,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
                 {
                     FullName = Util.ToTitleCase(FullNameTextBox.Text),
                     IdentificationNumber = IdentificationNumberTextBox.Text,
+                    BirthDate = BirthDatePicker.SelectedDate ?? DateTime.Now,
                     BloodType = (BloodTypeComboBox.SelectedItem as ComboBoxItem)?.Content.ToString(),
                     DonationDates = { DonationDatePicker.SelectedDate ?? DateTime.Now }
                 };
@@ -75,6 +82,19 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             else
             {
                 IdNumberError.Visibility = Visibility.Collapsed;
+            }
+
+            // Validate Birth Date
+            DateTime? selectedBirthDate = BirthDatePicker.SelectedDate;
+            if (selectedBirthDate == null || selectedBirthDate > DateTime.Today)
+            {
+                BirthDateError.Text = "Please select a valid date.";
+                BirthDateError.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                BirthDateError.Visibility = Visibility.Collapsed;
             }
 
             // Validate Blood Type

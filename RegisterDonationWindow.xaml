@@ -33,7 +33,7 @@
                     </Style>
                 </TextBox.Style>
             </TextBox>
-            <Button Grid.Column="1" Click="GenerateIDNumberButton_Click" Height="20" VerticalAlignment="Top">Generate</Button>
+            <Button x:Name="GenerateIDNumberButton" Grid.Column="1" Click="GenerateIDNumberButton_Click" Height="20" VerticalAlignment="Top">Generate</Button>
         </Grid>
         
         <!-- Full Name -->
@@ -55,7 +55,27 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
+        
+        <!-- Donation Date -->
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Birth date"/>
+            <Image ToolTip="Must be in DD/MM/YYYY format." Source="/Assets/letter_i_PNG67.png" Width="15" Height="15" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="5,0,0,0"/>
+        </StackPanel>
+        <TextBlock x:Name="BirthDateError" Foreground="Red" Visibility="Collapsed"/>
 
+        <DatePicker x:Name="BirthDatePicker" Margin="0,0,0,20">
+            <DatePicker.Style>
+                <Style TargetType="DatePicker">
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="true">
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                            <Setter Property="BorderBrush" Value="Red"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DatePicker.Style>
+        </DatePicker>
+        
         <!-- Blood Type -->
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Blood type"/>
