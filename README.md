@@ -16,7 +16,8 @@ After cloning the repository, open the solution/project with Visual Studio. Open
 `ClosedXML` - Installed using the NuGet Package Manager
 
 ### Screenshots
-![image](https://github.com/user-attachments/assets/1804fea6-ad87-47ed-981d-8d7af944be31)
-![image](https://github.com/user-attachments/assets/96726bd9-38b1-434f-9895-3a3b120c18be)
+![image](https://github.com/user-attachments/assets/d4ca9c83-636d-4082-8ed2-078e4238aa99)
+
+
 
 
