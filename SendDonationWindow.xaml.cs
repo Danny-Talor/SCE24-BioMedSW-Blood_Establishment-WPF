@@ -19,7 +19,6 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
     {
         private readonly ObservableCollection<Donation> Donations;
         private readonly string CurrentUser;
-        private readonly string ApplicationDataFileName;
         ApplicationData ApplicationData;
 
         public SendDonationWindow(ObservableCollection<Donation> donations, string currentUser, ApplicationData ApplicationData)
