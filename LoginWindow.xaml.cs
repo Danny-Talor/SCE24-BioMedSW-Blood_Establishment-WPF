@@ -29,7 +29,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         public LoginWindow()
         {
             InitializeComponent();
-            applicationData = ApplicationData.LoadApplicationData(); // Load application data from the XML file
+            applicationData = ApplicationData.LoadApplicationData(); // Load application data from the XML file if exists
             InitializeAdminAccount();
         }
 

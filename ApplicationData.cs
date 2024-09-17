@@ -26,10 +26,12 @@ public class ApplicationData
     public static void SaveApplicationData(ApplicationData data)
     {
         XmlSerializer serializer = new XmlSerializer(typeof(ApplicationData));
-
-        using (FileStream fileStream = new FileStream(Util.GetDataFilePath(Util.DataType.APPDATA), FileMode.Create))
+        using (MemoryStream memoryStream = new MemoryStream())
         {
-            serializer.Serialize(fileStream, data);
+            serializer.Serialize(memoryStream, data);
+            byte[] encryptedData = CryptographyHandler.EncryptData(memoryStream.ToArray());
+
+            File.WriteAllBytes(Util.GetDataFilePath(Util.DataType.APPDATA), encryptedData);
         }
     }
 
@@ -37,13 +39,16 @@ public class ApplicationData
     {
         try
         {
+            byte[] encryptedData = File.ReadAllBytes(Util.GetDataFilePath(Util.DataType.APPDATA));
+            byte[] decryptedData = CryptographyHandler.DecryptData(encryptedData);
+
             XmlSerializer serializer = new XmlSerializer(typeof(ApplicationData));
-            using (FileStream fileStream = new FileStream(Util.GetDataFilePath(Util.DataType.APPDATA), FileMode.Open))
+            using (MemoryStream memoryStream = new MemoryStream(decryptedData))
             {
-                return (ApplicationData)serializer.Deserialize(fileStream);
+                return (ApplicationData)serializer.Deserialize(memoryStream);
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
             return new ApplicationData();
