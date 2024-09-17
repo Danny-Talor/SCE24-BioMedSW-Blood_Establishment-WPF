@@ -339,7 +339,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
             }
             catch (Exception ex)
             {
-                StatusTextBlock.Text = "Error loading donations.";
+                StatusTextBlock.Text = $"Error loading donations. {ex.Message}";
             }
 
             // Calculate and update blood type totals
