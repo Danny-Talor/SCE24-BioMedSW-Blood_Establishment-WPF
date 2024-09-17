@@ -25,7 +25,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         [Fact]
         public void CanSubmitDonationForm()
         {
-            var app = Application.Launch("YourAppPath.exe");
+            var app = Application.Launch("\\SCE24-BioMedSW-Blood_Establishment-WPF.exe");
             var window = app.GetWindow("Register Donation Window");
 
             var nameBox = window.Get<TextBox>("NameTextBox");
@@ -176,7 +176,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         [Fact]
         public void CanOpenRegisterDonationWindow()
         {
-            var app = Application.Launch("YourAppPath.exe");
+            var app = Application.Launch("\\SCE24-BioMedSW-Blood_Establishment-WPF.exe");
             var window = app.GetWindow("MainWindow");
             var registerButton = window.Get<Button>("RegisterDonationButton");
 
@@ -191,7 +191,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         [Fact]
         public void CanOpenStatisticsWindowForResearchStudent()
         {
-            var app = Application.Launch("YourAppPath.exe");
+            var app = Application.Launch("\\SCE24-BioMedSW-Blood_Establishment-WPF.exe");
             var window = app.GetWindow("MainWindow");
             var loginButton = window.Get<Button>("LoginButton");
 
@@ -206,7 +206,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         [Fact]
         public void CanOpenChangeRoleWindow()
         {
-            var app = Application.Launch("YourAppPath.exe");
+            var app = Application.Launch("\\SCE24-BioMedSW-Blood_Establishment-WPF.exe");
             var window = app.GetWindow("MainWindow");
             var changeRoleButton = window.Get<Button>("ChangeRoleButton");
 
@@ -221,7 +221,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         [Fact]
         public void CanChangeUserRole()
         {
-            var app = Application.Launch("YourAppPath.exe");
+            var app = Application.Launch("\\SCE24-BioMedSW-Blood_Establishment-WPF.exe");
             var window = app.GetWindow("Change Role Window");
 
             var roleComboBox = window.Get<ComboBox>("RoleComboBox");
@@ -238,7 +238,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         [Fact]
         public void CanDisplayBloodTotalsInStatisticsWindow()
         {
-            var app = Application.Launch("YourAppPath.exe");
+            var app = Application.Launch("\\SCE24-BioMedSW-Blood_Establishment-WPF.exe");
             var window = app.GetWindow("StatisticsWindow");
 
             var bloodTotalsLabel = window.Get<Label>("BloodTotalsLabel");
@@ -250,7 +250,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         [Fact]
         public void CanDisplayDonationFrequency()
         {
-            var app = Application.Launch("YourAppPath.exe");
+            var app = Application.Launch("\\SCE24-BioMedSW-Blood_Establishment-WPF.exe");
             var window = app.GetWindow("StatisticsWindow");
 
             var frequencyLabel = window.Get<Label>("DonationFrequencyLabel");
@@ -262,7 +262,7 @@ namespace SCE24_BioMedSW_Blood_Establishment_WPF
         [Fact]
         public void CanDisplayBloodTypeUsage()
         {
-            var app = Application.Launch("YourAppPath.exe");
+            var app = Application.Launch("\\SCE24-BioMedSW-Blood_Establishment-WPF.exe");
             var window = app.GetWindow("StatisticsWindow");
 
             var usageLabel = window.Get<Label>("BloodTypeUsageLabel");
